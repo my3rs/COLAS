@@ -183,7 +183,7 @@ func start(c *cli.Context) error {
 	_, _, _, controllers := getIPAddresses()
 	sendCommandToControllers(controllers, "StartReaders", "")
 	sendCommandToControllers(controllers, "StartWriters", "")
-	//	sendCommandToControllers(controllers, "StartServers", "")
+	//	sendCommandToControllers(z, "StartServers", "")
 	return nil
 }
 

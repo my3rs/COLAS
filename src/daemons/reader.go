@@ -24,23 +24,29 @@ import (
 import "C"
 
 func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
+
 	active_chan = make(chan bool, 2)
 
-	//	var object_name string = "atomic_object"
 
-	var client_args *C.ClientArgs = C.create_ClientArgs(*cparameters)
-	var encoding_info *C.EncodeData = C.create_EncodeData(*cparameters)
-	var data_read_c *C.char
-	var abd_data *C.RawData
+
+
 	var opnum int = 0
-	write_initial_data(cparameters, parameters)
+	//write_initial_data(cparameters, parameters)
 
 	for {
 		select {
 		case active := <-active_chan: //start
+			fmt.Println("the reader init ...")
+
 			data.active = active
 			ReinitializeParameters()
 			LogParameters()
+			fmt.Println("******************")
+			fmt.Println("cprameters",cparameters, parameters)
+			fmt.Println("******************")
+			fmt.Print("data.ips",data.servers)
+			fmt.Println("******************")
+
 			write_initial_data(cparameters, parameters)
 			opnum = 0
 		case active := <-reset_chan:
@@ -49,6 +55,14 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 		default:
 			if data.active == true && len(data.servers) > 0 {
 				opnum++
+
+				//	var object_name string = "atomic_object"
+
+				var client_args *C.ClientArgs = C.create_ClientArgs(*cparameters) //error
+				var encoding_info *C.EncodeData = C.create_EncodeData(*cparameters)
+
+				var data_read_c *C.char
+				var abd_data *C.RawData
 
 				//rand_wait := rand_wait_time()*int64(time.Millisecond) + int64(time.Millisecond)
 				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
@@ -84,6 +98,7 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				// call the SODAW algorithm
 				if data.algorithm == "SODAW" {
 					var payload_read *C.char
+					fmt.Println(C.CString("atomic_object"), C.uint(opnum), encoding_info, client_args)
 					payload_read = C.SODAW_read(C.CString("atomic_object"), C.uint(opnum), encoding_info, client_args)
 					_ = payload_read
 
@@ -139,6 +154,7 @@ func Reader_process(parameters *Parameters) {
 	}
 	C.printParameters(cparameters)
 
+	fmt.Println("test")
 	reader_daemon(&cparameters, parameters)
 }
 
@@ -153,6 +169,8 @@ func write_initial_data(cparameters *C.Parameters, parameters *Parameters) {
 
 	payload_size = uint((parameters.Filesize_kb + float64(ran.Intn(100000000)%5)) * 1024)
 	payload = C.get_random_data(C.uint(payload_size))
+
+
 
 	var client_args *C.ClientArgs = C.create_ClientArgs(*cparameters)
 	var encoding_info *C.EncodeData = C.create_EncodeData(*cparameters)

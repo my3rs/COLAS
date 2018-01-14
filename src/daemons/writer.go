@@ -65,7 +65,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				if data.algorithm == "ABD" {
 					abd_data.data = unsafe.Pointer(payload)
 					abd_data.data_size = C.int(payload_size)
-					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args);
+					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
 				}
 
 				if data.algorithm == "SODAW" {
@@ -76,7 +76,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				log.Println(data.run_id, "WRITE", string(data.name), data.write_counter,
 					rand_wait/int64(time.Millisecond), elapsed)
-        C.free(payload)
+				C.free(payload)
 				data.write_counter += 1
 			} else {
 				time.Sleep(5 * 1000 * time.Microsecond)
