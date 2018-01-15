@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"time"
 	"unsafe"
+	"strings"
 )
 
 /*
@@ -26,21 +27,37 @@ import "C"
 func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	active_chan = make(chan bool, 2)
 
-	var client_args *C.ClientArgs = C.create_ClientArgs(*cparameters)
-	var encoding_info *C.EncodeData = C.create_EncodeData(*cparameters)
-	var abd_data *C.RawData = C.create_RawData(*cparameters)
-
 	s1 := rand.NewSource(time.Now().UnixNano())
 	ran := rand.New(s1)
+
+	var client_args *C.ClientArgs
+	var encoding_info *C.EncodeData
 
 	var payload *C.char
 	var opnum int = 0
 	var payload_size uint
-
 	for {
 		select {
 		case active := <-active_chan:
 			data.active = active
+
+			if len(data.servers) <= 0 {
+				data.active=false
+				fmt.Println("please set servers,next startporcess")
+				break
+			}
+			for k,v := range data.servers{
+				if v {
+					parameters.Ip_list= append(parameters.Ip_list, k)
+				}
+			}
+			parameters.Ipaddresses=strings.Join(parameters.Ip_list, " ")
+			parameters.Num_servers = uint(len(parameters.Ip_list))
+			copyGoParamToCParam(cparameters, parameters)
+
+			client_args= C.create_ClientArgs(*cparameters)
+			encoding_info = C.create_EncodeData(*cparameters)
+
 			ReinitializeParameters()
 			LogParameters()
 		case active := <-reset_chan:
@@ -52,6 +69,8 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				//rand_wait := rand_wait_time()*int64(time.Millisecond) + int64(time.Millisecond)
 				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
 				time.Sleep(time.Duration(rand_wait))
+
+				var abd_data *C.RawData = C.create_RawData(*cparameters)
 
 				fmt.Printf("%s  %d %d %s %s\n", parameters.Server_id, opnum, rand_wait, C.GoString(client_args.servers_str), parameters.port)
 
@@ -76,7 +95,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				log.Println(data.run_id, "WRITE", string(data.name), data.write_counter,
 					rand_wait/int64(time.Millisecond), elapsed)
-				C.free(payload)
+				//C.free(payload)
 				data.write_counter += 1
 			} else {
 				time.Sleep(5 * 1000 * time.Microsecond)
@@ -112,7 +131,6 @@ func Writer_process(parameters *Parameters) {
 	}
 
 	C.printParameters(cparameters)
-
 	writer_daemon(&cparameters, parameters)
 }
 
