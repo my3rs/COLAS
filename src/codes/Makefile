@@ -1,6 +1,6 @@
 CC=gcc  -DDEBUG
 CPP=g++  -DDEBUG
-ROOT=/home/$(USER)
+ROOT=/home/cyril/Workspace/COLAS/deps
 
 CPPFLAGS= -g -std=c++11 -I$(ROOT)/shared_kodocpp/include
 CFLAGS= -g -lm #-Wall 

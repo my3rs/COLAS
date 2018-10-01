@@ -1,26 +1,27 @@
 reader:
-    image: kishori82/dev:COLAS3
-    command: /home/docker/COLAS/src/abdprocess --process-type 0
-    #command: /usr/bin/env
+    #image: kishori82/dev:COLAS3
+    image: fdl66/colas
+    command: /home/xugp/COLAS_new/src/process --process-type 0
+    #command: /bin/bash
     volumes:
       - /home/docker:/home/docker
     environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+    - LD_LIBRARY_PATH=/usr/local/lib:/home/xugp/COLAS_new/src/abd:/home/xugp/COLAS_new/src/soda:/home/xugp/COLAS_new/src/codes:/home/xugp/COLAS_new/src/sodaw
 
       #writer:
       #    image: kishori82/dev:COLAS3
-      #    command: /home/docker/COLAS/src/abdprocess --process-type 1
+      #    command: /home/xugp/COLAS_new/src/abdprocess --process-type 1
       #    environment:
-      #    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+      #    - LD_LIBRARY_PATH=/usr/local/lib:/home/xugp/COLAS_new/src/abd:/home/xugp/COLAS_new/src/soda:/home/xugp/COLAS_new/src/codes:/home/xugp/COLAS_new/src/sodaw
       #
       #server:
       #    image: kishori82/dev:COLAS3
-      #    command: /home/docker/COLAS/src/abdprocess --process-type 2 --init-file-size 1000
+      #    command: /home/xugp/COLAS_new/src/abdprocess --process-type 2 --init-file-size 1000
       #    environment:
-      #    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+      #    - LD_LIBRARY_PATH=/usr/local/lib:/home/xugp/COLAS_new/src/abd:/home/xugp/COLAS_new/src/soda:/home/xugp/COLAS_new/src/codes:/home/xugp/COLAS_new/src/sodaw
       #
       #controller:
       #    image: kishori82/dev:COLAS3
-      #    command: /home/docker/COLAS/src/abdprocess --process-type 3
+      #    command: /home/xugp/COLAS_new/src/abdprocess --process-type 3
       #    environment:
-      #    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+      #    - LD_LIBRARY_PATH=/usr/local/lib:/home/xugp/COLAS_new/src/abd:/home/xugp/COLAS_new/src/soda:/home/xugp/COLAS_new/src/codes:/home/xugp/COLAS_new/src/sodaw

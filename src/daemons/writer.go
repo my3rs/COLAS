@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 	"unsafe"
-	"strings"
 )
 
 /*
@@ -42,20 +42,20 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			data.active = active
 
 			if len(data.servers) <= 0 {
-				data.active=false
+				data.active = false
 				fmt.Println("please set servers,next startporcess")
 				break
 			}
-			for k,v := range data.servers{
+			for k, v := range data.servers {
 				if v {
-					parameters.Ip_list= append(parameters.Ip_list, k)
+					parameters.Ip_list = append(parameters.Ip_list, k)
 				}
 			}
-			parameters.Ipaddresses=strings.Join(parameters.Ip_list, " ")
+			parameters.Ipaddresses = strings.Join(parameters.Ip_list, " ")
 			parameters.Num_servers = uint(len(parameters.Ip_list))
 			copyGoParamToCParam(cparameters, parameters)
 
-			client_args= C.create_ClientArgs(*cparameters)
+			client_args = C.create_ClientArgs(*cparameters)
 			encoding_info = C.create_EncodeData(*cparameters)
 
 			ReinitializeParameters()
@@ -111,14 +111,14 @@ func Writer_process(parameters *Parameters) {
 
 	data.processType = 1
 	//Initialize the parameters
-	InitializeParameters()
+	InitializeParameters(parameters)
 
 	printParameters(parameters)
 	// Keep running the server for now
 	go HTTP_Server()
 
-	log.Println("INFO\tStarting writer process\n")
-	log.Println("INFO\tTIME in Milliseconds\n")
+	log.Println("INFO\tStarting writer process")
+	log.Println("INFO\tTIME in Milliseconds")
 
 	var cparameters C.Parameters
 	copyGoParamToCParam(&cparameters, parameters)

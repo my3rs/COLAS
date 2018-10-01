@@ -52,6 +52,7 @@ type Parameters struct {
 	Wait             uint64
 	Filesize_kb      float64
 	Processtype      uint64
+	log_latency bool
 }
 
 type ClientArgs struct {
@@ -93,9 +94,12 @@ type Params struct {
 	N                uint64
 	coding_algorithm uint32
 	symbol_size      int
+
+	log_latency bool
 }
 
-func InitializeParameters() {
+func InitializeParameters(parameters *Parameters) {
+	data.log_latency =  parameters.log_latency
 	data.readers = make(map[string]bool)
 	data.servers = make(map[string]bool)
 	data.writers = make(map[string]bool)
@@ -119,10 +123,14 @@ func InitializeParameters() {
 	data.N = 1
 	data.K = uint64(math.Ceil((float64(data.N) + 1) / 2.0))
 
-	data.coding_algorithm = 0
+	if (parameters.Coding_algorithm == full_vector) {
+		data.coding_algorithm = 0
+	} else {
+		data.coding_algorithm = 1
+	}
+
 	data.symbol_size = 1024
-	//data.algorithm = "ABD"
-	data.algorithm = "SODAW"
+	data.algorithm = parameters.Algorithm
 	data.run_id = "DEFULT_RUN"
 	data.writeto = "ram"
 	data.name = "default"
@@ -155,7 +163,7 @@ func ReinitializeParameters() {
 func SetDefaultParameters(parameters *Parameters) {
 	parameters.Num_servers = 0
 	parameters.Ipaddresses = ""
-	parameters.Algorithm = sodaw
+	parameters.Algorithm = abd
 	parameters.Coding_algorithm = full_vector
 	parameters.Wait = 100
 	parameters.Filesize_kb = 1.1

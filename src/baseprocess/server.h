@@ -1,7 +1,7 @@
 #ifndef __SERVER__
 #define __SERVER__
 
-#include "czmq.h"
+#include <czmq.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

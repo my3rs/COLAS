@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="COLAS"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\src\;CMake Files\src\abd\;CMake Files\src\codes\;CMake Files\src\soda\;CMake Files\src\sodaw\;CMake Files\src\baseprocess\;CMake Files\src\utilities\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install/strip">
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/strip"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install/local">
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 install/local"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="list_install_components">
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 list_install_components"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="install">
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 install"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="processc">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/processc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/codes"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 processc"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="processc/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/processc" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/codes"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 processc/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="abd">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libabd.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 abd"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="abd/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libabd.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 abd/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/abd/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rlnc_rs">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/librlnc_rs.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 rlnc_rs"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rlnc_rs/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/librlnc_rs.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 rlnc_rs/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rlnc_rs_check">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/rlnc_rs_check" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 rlnc_rs_check"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rlnc_rs_check/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/rlnc_rs_check" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 rlnc_rs_check/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reed_solomon_example">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/reed_solomon_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 reed_solomon_example"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reed_solomon_example/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/reed_solomon_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 reed_solomon_example/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rlnc_example">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/rlnc_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 rlnc_example"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rlnc_example/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/bin/rlnc_example" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/bin"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 rlnc_example/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reed">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libreed.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 reed"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="reed/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libreed.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 reed/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/codes/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="soda">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libsoda.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/codes"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/ZMQ/include"/>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 soda"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="soda/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libsoda.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/codes"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/ZMQ/include"/>
+					<Add directory="/home/cyril/Workspace/COLAS/deps/shared_kodocpp/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 soda/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/soda/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sodaw">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libsodaw.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/codes"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/ZMQ/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 sodaw"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="sodaw/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libsodaw.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/codes"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/ZMQ/include"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 sodaw/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/sodaw/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="baseprocess">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libbaseprocess.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 baseprocess"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="baseprocess/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libbaseprocess.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 baseprocess/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/baseprocess/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="utilities">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libutilities.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 utilities"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="utilities/fast">
+				<Option output="/home/cyril/Workspace/COLAS/cmake-build-debug/lib/libutilities.so" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities"/>
+				<Option object_output="./"/>
+				<Option type="3"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/cyril/Workspace/COLAS/src/baseprocess"/>
+					<Add directory="/home/cyril/Workspace/COLAS/src/utilities"/>
+					<Add directory="/usr/include/c++/7"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/7"/>
+					<Add directory="/usr/include/c++/7/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 utilities/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/home/cyril/Workspace/COLAS/cmake-build-debug/src/utilities/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_client.c">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_client.h">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_reader.c">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_reader.h">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_server.c">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_server.h">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_writer.c">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/abd_writer.h">
+			<Option target="abd"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/baseprocess/client.c">
+			<Option target="baseprocess"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/baseprocess/client.h">
+			<Option target="baseprocess"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/baseprocess/server.c">
+			<Option target="baseprocess"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/baseprocess/server.h">
+			<Option target="baseprocess"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/reed_solomon.cpp">
+			<Option target="reed"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/reed_solomon.h">
+			<Option target="reed"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/reed_solomon_example.cpp">
+			<Option target="reed_solomon_example"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/rlnc_example.cpp">
+			<Option target="rlnc_example"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/rlnc_rs.cpp">
+			<Option target="rlnc_rs"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/rlnc_rs.h">
+			<Option target="rlnc_rs"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/rlnc_rs_check.c">
+			<Option target="rlnc_rs_check"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/process.c">
+			<Option target="processc"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/process.h">
+			<Option target="processc"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/soda/soda_reader.c">
+			<Option target="soda"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/soda/soda_reader.h">
+			<Option target="soda"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_client.c">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_client.h">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_reader.c">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_reader.h">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_server.c">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_server.h">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_writer.c">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/sodaw_writer.h">
+			<Option target="sodaw"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/algo_utils.c">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/algo_utils.h">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/base64.c">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/base64.h">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/helpers.c">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/helpers.h">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/md-primitive.c">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/md-primitive.h">
+			<Option target="utilities"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/abd/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\abd\"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/codes/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\codes\"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/soda/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\soda\"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/sodaw/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\sodaw\"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/baseprocess/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\baseprocess\"/>
+		</Unit>
+		<Unit filename="/home/cyril/Workspace/COLAS/src/utilities/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\src\utilities\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

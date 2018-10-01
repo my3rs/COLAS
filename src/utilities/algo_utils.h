@@ -66,7 +66,7 @@ typedef struct  _TAG {
 
 typedef struct _RawData {
    void *data;
-   int data_size;
+   size_t data_size;
    Tag *tag;
 } RawData;
 
@@ -134,6 +134,10 @@ void string_to_tag(char *str, Tag *tag) ;
 // converts a tag to a string
 void tag_to_string(Tag tag, char *buf) ;
 
+// converts a tag to a string
+void tag_ptr_to_string(Tag *tag, char *buf);
+
+
 Tag *get_max_tag(zlist_t *tag_list) ;
 
 void free_items_in_list( zlist_t *list) ;
@@ -149,6 +153,7 @@ char **create_server_names(char *servers_str) ;
 void  destroy_server_names(char **servers, int num_servers) ;
 unsigned int count_num_servers(char *servers_str) ;
 
+unsigned int get_uint_frame(zhash_t *frames, const char *str);
 
 int  get_string_frame(char *buf, zhash_t *frames,  const char *str);
 

@@ -103,7 +103,7 @@ func Server_process(parameters *Parameters) {
 	f := SetupLogging()
 	defer f.Close()
 	// Run the server for now
-	InitializeParameters()
+	InitializeParameters(parameters)
 	printParameters(parameters)
 
 	go HTTP_Server()

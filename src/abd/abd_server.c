@@ -68,13 +68,13 @@ void algorithm_ABD_WRITE_VALUE( zhash_t *frames, void *worker) {
 
         zframe_t *item = zhash_lookup(temp_hash_hash,key);
         assert(item!=NULL);
-        
+
         status->data_memory -= (float)strlen((char *)item);
         status->metadata_memory -=  (float)strlen( (char *)key);
 
         zhash_delete(temp_hash_hash, key);
         zframe_destroy(&item);
-        
+
         zlist_purge(keys);
         zlist_destroy(&keys);
 
@@ -191,9 +191,9 @@ void algorithm_ABD(zhash_t *frames, void *worker, void *_server_args) {
 
     /* zframe_t *payloadf= zmsg_pop (msg);
             printf("%d\n",  (int)zframe_size(payloadf));
-    */
-    if(  get_uint_frame(frames, OPNUM) >400) exit(0);
 
+    if(  get_uint_frame(frames, OPNUM) >400) exit(0);
+    */
 }
 
 #endif

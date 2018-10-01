@@ -8,6 +8,9 @@ logs/*
 src/ZMQ/czmqlibs/*
 src/ZMQ/zmqlibs/*
 
+.idea/
+cmake-debug-build/
+
 
 abdprocess
 abdprocessc

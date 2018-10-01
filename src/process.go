@@ -1,7 +1,7 @@
 package main
 
 import (
-	daemons "./daemons/"
+	daemons "./daemons"
 	"strings"
 	"fmt"
 	"math"
@@ -12,7 +12,7 @@ import (
 )
 
 /*
-#cgo CFLAGS: -Iabd  -Isodaw  -Iutilities
+#cgo CFLAGS: -Iabd  -Isodaw  -Iutilities -IZMQ/include
 #cgo LDFLAGS: -Labd  -labd -Lsodaw -lsodaw -lzmq  -Lcodes -lreed -Wl,-rpath=codes
 #include "helpers.h"
 */
@@ -107,11 +107,11 @@ func main() {
 	}
 
 
-  parameters.Ipaddresses=strings.Join(parameters.Ip_list, " ")
-  parameters.Num_servers = uint(len(parameters.Ip_list))
+	parameters.Ipaddresses=strings.Join(parameters.Ip_list, " ")
+	parameters.Num_servers = uint(len(parameters.Ip_list))
 
-  s1 := rand.NewSource(time.Now().UnixNano())
-  ran := rand.New(s1)
+	s1 := rand.NewSource(time.Now().UnixNano())
+	ran := rand.New(s1)
 
 	if parameters.Processtype == 0 {
 	  parameters.Server_id = "reader-" + strconv.Itoa(ran.Intn(10000000000))
@@ -124,7 +124,7 @@ func main() {
 		daemons.Server_process(&parameters)
 	} else if parameters.Processtype == 3 {
 	  parameters.Server_id = "controller-" + strconv.Itoa(ran.Intn(10000000000))
-		daemons.Controller_process()
+		daemons.Controller_process(&parameters)
 	} else {
 		fmt.Println("unknown type\n")
 	}

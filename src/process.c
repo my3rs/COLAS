@@ -37,7 +37,7 @@ int main(int argc, char *argv[]) {
     Server_Status *server_status =  get_server_status(parameters);
 
     printf("Server Str : %s\n", server_args->servers_str);
-    printf("MDS     : (%d, %d)\n", server_args->N, server_args->K);
+    printf("MDS (n,k)  : (%d, %d)\n", server_args->N, server_args->K);
 
 
     if(parameters.processtype==reader) {
@@ -62,19 +62,23 @@ void reader_process(Parameters parameters) {
     EncodeData *encoding_info = create_EncodeData(parameters);
     ClientArgs *client_args = create_ClientArgs(parameters);
 
-    for( opnum=2; opnum< 450; opnum++) {
+    char obj_name[100]="atomic_object";
+
+
+    for( opnum=2; opnum< 10; opnum++) {
         usleep(parameters.wait*1000);
 
         printf("%s  %d  %s %s\n", parameters.server_id, opnum, client_args->servers_str, parameters.port);
 
         RawData *abd_data;
         if(parameters.algorithm==abd)  {
-          abd_data = ABD_read("atomic_object", opnum, client_args);
-          free(abd_data->data);
+          abd_data = ABD_read(obj_name, opnum, client_args);
+          zframe_t *tmp = (zframe_t*)(abd_data->data);
+          zframe_destroy(&tmp);
           free(abd_data->tag);
           free(abd_data);
         }
-        
+
 
         if(parameters.algorithm==sodaw) {
           char *payload_read = SODAW_read("atomic_object", opnum,  encoding_info, client_args);
@@ -131,6 +135,7 @@ void write_initial_data(Parameters parameters) {
 
     unsigned int payload_size=filesize;
     char *payload = get_random_data(filesize);
+    printf("create random data\n");
 
     EncodeData *encoding_info = create_EncodeData(parameters);
     ClientArgs *client_args = create_ClientArgs(parameters);

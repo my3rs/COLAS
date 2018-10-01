@@ -18,8 +18,8 @@ void ABD_write_value_phase(
     unsigned int op_num,
     zsock_t *sock_to_servers,
     unsigned int num_servers,
-    RawData *raw_data,
-    Tag max_tag   // for read it is max and for write it is new
+    RawData *raw_data
+   // Tag max_tag   // for read it is max and for write it is new
 );
 
 #endif

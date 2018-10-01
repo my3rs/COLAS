@@ -1,8 +1,8 @@
 ALL = process 
-CC=gcc -g  -DDEBUG
+CC=gcc -std=gnu99 -g  -DDEBUG
 
 CFLAGS= -Iutilities/ -Iabd/ -Icodes/ -Isodaw  -IZMQ/include 
-LDFLAGS= -lm -LZMQ/zmqlibs  -LZMQ/czmqlibs  -lzmq -lczmq  -Labd/ -Lcodes/ -Lsodaw -lsodaw  -lrlnc_rs -labd -Wimplicit-function-declaration -fPIC -Wall 
+LDFLAGS= -lm -LZMQ/zmqlibs  -LZMQ/czmqlibs  -lzmq -lczmq  -Labd/ -labd -Lcodes/ -lrlnc_rs -Lsodaw -lsodaw -Wimplicit-function-declaration -fPIC -Wall 
 
 
 all: $(ALL)
@@ -16,7 +16,7 @@ CSRCS = abd/abd_client.c abd/abd_reader.c abd/abd_writer.c abd/abd_server.c abd/
 
 process: $(TARGET) $(SRCS)  #$(CSRCS)
 	go fmt $(SRCS)
-	go build -x -o process $(TARGET)
+	go build -x -o process $(TARGET).go
 
 all=CODES ABD SODAW $(TARGET)
 
@@ -24,14 +24,15 @@ ABD:
 	@echo "Building ABD"
 	make -C abd clean
 	make -C abd
+	cp ./abd/libabd.so /lib64/
 
 SODAW:
-	@echo "Building ABD"
+	@echo "Building SODAW"
 	make -C sodaw clean
 	make -C sodaw
 
 CODES:
-	@echo "Building ABD"
+	@echo "Building CODES"
 	make -C codes clean
 	make -C codes
 

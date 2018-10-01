@@ -13,28 +13,27 @@ int s_interrupted;
 
 #define DEBUG_MODE 1
 
+
+
 void  ABD_write_value_phase(
     char *obj_name,
     unsigned int op_num,
     zsock_t *sock_to_servers,
     unsigned int num_servers,
-    RawData *abd_data,
-    Tag max_tag   // for read it is max and for write it is new
+    RawData *abd_data
 ) {
     // send out the messages to all servers
     char phase[100];
     char tag_str[100];
 
-
     unsigned int majority =  ceil(((float)num_servers+1)/2);
 
     unsigned int round;
     zmq_pollitem_t items [] = { { sock_to_servers, 0, ZMQ_POLLIN, 0 } };
-    tag_to_string(max_tag, tag_str);
+    tag_ptr_to_string(abd_data->tag, tag_str);
 
 
     char *types[] = {OBJECT, ALGORITHM, PHASE, OPNUM, TAG, PAYLOAD};
-
     send_multicast_servers(sock_to_servers, num_servers, types,  6, obj_name, ABD, WRITE_VALUE, &op_num, tag_str, abd_data) ;
 
     unsigned int responses =0; 
@@ -62,7 +61,7 @@ void  ABD_write_value_phase(
             get_string_frame(phase, frames, PHASE);
             round = get_int_frame(frames, OPNUM);
 
-            if(round==op_num && strcmp(phase, WRITE_VALUE)==0) {
+            if(round == op_num && strcmp(phase, WRITE_VALUE) == 0) {
                 responses++;
                 if(DEBUG_MODE) print_out_hash_in_order(frames, names);
                 if(responses >= majority) {

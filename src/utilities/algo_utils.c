@@ -202,6 +202,13 @@ void tag_to_string(Tag tag, char *buf) {
 }
 
 
+
+
+void tag_ptr_to_string(Tag *tag, char *buf){
+	sprintf(buf, "%d_%s", tag->z, tag->id);
+}
+
+
 Tag *get_max_tag( zlist_t *tag_list) {
     Tag *tag;
     Tag *max_tag = (Tag *)malloc(sizeof(Tag));
@@ -460,7 +467,6 @@ int print_object_hash(zhash_t *object_hash) {
     printf("\tprinting the object hash....\n");
     zlist_t *keys = zhash_keys(object_hash);
     char *key;
-    printf("\t ========================================\n");
     for( key = (char *)zlist_first(keys);  key != NULL; key = (char *)zlist_next(keys)) {
         printf("\t Object : %s\n", key);
         zhash_t *single_object_hash = (zhash_t *)zhash_lookup(object_hash, key);
@@ -478,7 +484,6 @@ int print_object_hash(zhash_t *object_hash) {
         zlist_purge(keys1);
         zlist_destroy(&keys1);
     }
-    printf("\t ========================================\n");
     zlist_purge(keys);
     zlist_destroy(&keys);
     return 1;
@@ -502,6 +507,10 @@ void insertIntoHash(const char* TYPE,
                     zmsg_t *msg,
                     zhash_t *frames) {
     zframe_t *frame = zmsg_pop (msg);
+//printf("****--------------pop msg type %s----------------------\n", TYPE);
+assert(frame!=NULL);
+//zclock_sleep(800);
+
     zhash_insert(frames, TYPE, (void *)frame);
 }
 

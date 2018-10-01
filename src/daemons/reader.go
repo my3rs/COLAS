@@ -1,16 +1,17 @@
 package daemons
 
 import (
+	"os"
 	"fmt"
 	"log"
 	"math/rand"
+	"strings"
 	"time"
 	"unsafe"
-	"strings"
 )
 
 /*
-#cgo CFLAGS: -I../abd -I../sodaw -I../utilities -I../baseprocess
+#cgo CFLAGS: -I../abd -I../sodaw -I../utilities -I../baseprocess -I../ZMQ/include
 #cgo LDFLAGS: -L../abd  -labd  -L../sodaw -lsodaw
 #include <abd_client.h>
 #include <client.h>
@@ -27,7 +28,7 @@ import "C"
 func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	active_chan = make(chan bool, 2)
 	//var object_name string = "atomic_object"
-	data.active=false
+	data.active = false
 
 	var client_args *C.ClientArgs
 	var encoding_info *C.EncodeData
@@ -35,25 +36,34 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	var abd_data *C.RawData
 	var opnum int = 0
 
+	if data.log_latency {
+		log_file_latency, err := os.OpenFile("/home/Cyril/Workspace/logs/readers.log", os.O_RDWR|os.O_CREATE, 0666)
+		if err != nil {
+			fmt.Println("Can not initialize log file!")
+			os.Exit(-1)
+		}
+		defer log_file_latency.Close()
+	}
+
 	for {
 		select {
 		case active := <-active_chan: //start
 			data.active = active
 			if len(data.servers) <= 0 {
-				data.active=false
+				data.active = false
 				fmt.Println("please set servers,next startporcess")
 				break
 			}
-			for k,v := range data.servers{
+			for k, v := range data.servers {
 				if v {
-					parameters.Ip_list= append(parameters.Ip_list, k)
+					parameters.Ip_list = append(parameters.Ip_list, k)
 				}
 			}
-			parameters.Ipaddresses=strings.Join(parameters.Ip_list, " ")
+			parameters.Ipaddresses = strings.Join(parameters.Ip_list, " ")
 			parameters.Num_servers = uint(len(parameters.Ip_list))
 			copyGoParamToCParam(cparameters, parameters)
 
-			client_args= C.create_ClientArgs(*cparameters)
+			client_args = C.create_ClientArgs(*cparameters)
 			encoding_info = C.create_EncodeData(*cparameters)
 
 			ReinitializeParameters()
@@ -65,8 +75,6 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			data.write_counter = 0
 		default:
 			if data.active == true && len(data.servers) > 0 {
-				fmt.Println("************asdfasdf2")
-
 				opnum++
 
 				//rand_wait := rand_wait_time()*int64(time.Millisecond) + int64(time.Millisecond)
@@ -81,10 +89,18 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				start := time.Now()
 				if data.algorithm == "ABD" {
+
 					abd_data = C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
-					C.free(abd_data.data)
-					C.free(abd_data.tag)
-					C.free(abd_data)
+
+					if data.log_latency {
+
+					}
+
+					var tmp_ptr unsafe.Pointer = unsafe.Pointer(abd_data.data)
+					var tmp *C.zframe_t = (*C.zframe_t)(tmp_ptr)
+					C.zframe_destroy(&tmp)
+					C.free(unsafe.Pointer(abd_data.tag))
+					C.free(unsafe.Pointer(abd_data))
 
 					/*
 						data_read_c = nil
@@ -139,7 +155,7 @@ func Reader_process(parameters *Parameters) {
 	SetupLogging()
 	fmt.Println("INFO\tStarting reader\n")
 
-	InitializeParameters()
+	InitializeParameters(parameters)
 	printParameters(parameters)
 
 	go HTTP_Server()
@@ -149,7 +165,6 @@ func Reader_process(parameters *Parameters) {
 
 	var cparameters C.Parameters
 	copyGoParamToCParam(&cparameters, parameters)
-
 
 	if parameters.Num_servers > 0 {
 		data.active = true
@@ -185,7 +200,6 @@ func write_initial_data(cparameters *C.Parameters, parameters *Parameters) {
 	}
 
 	if data.algorithm == "SODAW" {
-		fmt.Println("**************debug**********reader" + data.algorithm)
 		C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)
 	}
 

@@ -272,6 +272,7 @@ zhash_t *receive_message_frames_at_server(zmsg_t *msg, zlist_t *names) {
 
     insertIntoHashAndList(SENDER, msg, frames, names);
     insertIntoHashAndList(OBJECT, msg, frames, names);
+
     insertIntoHashAndList(ALGORITHM, msg, frames, names);
     get_string_frame(algorithm_name, frames, ALGORITHM);
     insertIntoHashAndList(PHASE, msg, frames, names);

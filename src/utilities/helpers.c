@@ -38,7 +38,7 @@ void printParameters(Parameters parameters) {
     int i;
 
     printf("Parameters [C]\n");
-    printf("\tName  \t\t\t\t: %s\n", parameters.server_id);;
+    printf("\tName  \t\t\t\t: %s\n", parameters.server_id);
 
     switch(parameters.processtype) {
     case reader:

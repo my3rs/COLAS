@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g  -shared -Wl,-soname,libbaseprocess.so -o ../../lib/libbaseprocess.so CMakeFiles/baseprocess.dir/client.c.o CMakeFiles/baseprocess.dir/server.c.o  -L/home/cyril/Workspace/COLAS/cmake-build-debug/lib -Wl,-rpath,/home/cyril/Workspace/COLAS/cmake-build-debug/lib: ../../lib/libutilities.so -lczmq -lzmq 

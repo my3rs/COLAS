@@ -1,0 +1,1 @@
+/usr/bin/cc -fPIC -g  -shared -Wl,-soname,libutilities.so -o ../../lib/libutilities.so CMakeFiles/utilities.dir/algo_utils.c.o CMakeFiles/utilities.dir/base64.c.o CMakeFiles/utilities.dir/helpers.c.o CMakeFiles/utilities.dir/md-primitive.c.o  -L/home/cyril/Workspace/COLAS/cmake-build-debug/lib -Wl,-rpath,/home/cyril/Workspace/COLAS/cmake-build-debug/lib: -lczmq -lzmq 

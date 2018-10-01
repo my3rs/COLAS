@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,librlnc_rs.so -o ../../lib/librlnc_rs.so CMakeFiles/rlnc_rs.dir/rlnc_rs.cpp.o  -L/home/cyril/Workspace/COLAS/deps/shared_kodocpp  -L/home/cyril/Workspace/COLAS/cmake-build-debug/lib -Wl,-rpath,/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/cmake-build-debug/lib: -lkodoc 

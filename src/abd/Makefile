@@ -1,11 +1,11 @@
-CC=gcc -g -DDEBUG
+CC=gcc -std=gnu99 -g -DDEBUG
 
 
 
 UTILS=../utilities
 BASEPROCESS=../baseprocess
-CIFLAGS= -I$(UTILS) -I../ZMQ/include  -I../utilities/ -I../baseprocess
-CFLAGS= -lm -L../ZMQ/zmqlibs -lzmq  -L../ZMQ/czmqlibs/lib -lczmq -Wimplicit-function-declaration -fPIC -Wall 
+CIFLAGS= -I$(UTILS) -I../ZMQ/include  -I../utilities/ -I../baseprocess -I/usr/local/include
+CFLAGS= -lm -L../ZMQ/zmqlibs -lzmq  -L../ZMQ/czmqlibs/lib -lczmq -lpthread -L/usr/local/lib -static -lzlog -lzmq -Wimplicit-function-declaration -fPIC -Wall
 
 #SOURCES: hwserver.c asyncsrv.c
 UT_DEPS=$(UTILS)/algo_utils.h $(UTILS)/base64.h  $(BASEPROCESS)/client.h $(BASEPROCESS)/server.h
@@ -42,6 +42,8 @@ static: abd_client.c abd_server.c abd_reader.c abd_writer.c
 
 libabd.so: $(OBJS)
 	$(CC) -shared -fPIC -o $@  $?  $(CFLAGS)
+	sudo rm -f /lib64/libabd.so
+	sudo cp libabd.so /usr/local/lib
 
 clean:
 	rm -f abd abd_client abd_server $(OBJS)  *.o  *.so

@@ -4,6 +4,7 @@
 //  it easier to start and stop the example. Each task has its own
 //  context and conceptually acts as a separate process.
 
+#include <zlog.h>
 #include "abd_writer.h"
 
 extern int s_interrupted;
@@ -103,27 +104,53 @@ bool ABD_write(
 ) {
     s_catch_signals();
     int num_servers = count_num_servers(client_args->servers_str);
-#ifndef DEBUG_MODE
+#ifdef DEBUG_MODE
     printf("\t\tObj name       : %s\n",obj_name);
     printf("\t\tWriter name    : %s\n",client_args->client_id);
     printf("\t\tOperation num  : %d\n",op_num);
-    printf("\t\tSize of data   : %d\n", payload_size);
+    printf("\t\tSize of data   : %d\n",raw_data->data_size);
 
     printf("\t\tServer string  : %s\n", client_args->servers_str);
     printf("\t\tPort           : %s\n", client_args->port);
 
     printf("\t\tNum of Servers  : %d\n",num_servers);
 
-    for(j=0; j < num_servers; j++) {
-        printf("\t\tServer : %s\n", servers[j]);
-    }   
+    //for(j=0; j < num_servers; j++) {
+    //    printf("\t\tServer : %s\n", servers[j]);
+    //}   
     printf("\n");
 #endif
 
     void *sock_to_servers= get_socket_servers(client_args);
+    char s_log[2048];
+
+    int rc = zlog_init("/home/cyril/Workspace/config/zlog.conf");
+    if (rc) {
+        printf("zlog init failed\n");
+        exit(-1);
+    }
+
+    zlog_category_t *category_latency = zlog_get_category("write_latency");
+    if (!category_latency) {
+        printf("can not get write_latency category\n");
+        zlog_fini();
+        exit(-2);
+    }
+
+    zlog_category_t *category_throughput = zlog_get_category("write_throughput");
+    if (!category_throughput) {
+        printf("can not get write_throughput category\n");
+        zlog_fini();
+        exit(-2);
+    }
 
     printf("WRITE %d\n", op_num);
     printf("\tGET_TAG (WRITER)\n");
+
+
+    /** log  */
+    sprintf(s_log, "{client_id:\"%s\", op_num:%d, status:0}", client_args->client_id, op_num);
+    zlog_info(category_latency, s_log);
 
     Tag *max_tag=  ABD_get_max_tag_phase(
                                        obj_name,  
@@ -132,10 +159,14 @@ bool ABD_write(
                                        num_servers
                                        );
 
-    Tag new_tag;
-    new_tag.z = max_tag->z + 1;
-    strcpy(new_tag.id, client_args->client_id);
-    free(max_tag);
+
+    memset(s_log, '0', 2048);
+    sprintf(s_log, "{client_id:\"%s\", op_num:%d, status:1}", client_args->client_id, op_num);
+    zlog_info(category_latency, s_log);
+
+    max_tag->z += 1;
+    strcpy(max_tag->id, client_args->client_id);
+    raw_data->tag = max_tag;
     printf("\tWRITE_VALUE (WRITER)\n");
 
     ABD_write_value_phase(
@@ -143,10 +174,15 @@ bool ABD_write(
                       op_num, 
                       sock_to_servers, 
                       num_servers, 
-                      raw_data, 
-                      new_tag
+                      raw_data 
                     );
+    free(max_tag);
 
+    memset(s_log, '0', 2048);
+    sprintf(s_log, "{client_id:\"%s\", op_num:%d, data_size: %d}", client_args->client_id, op_num, raw_data->data_size);
+    zlog_info(category_throughput, s_log);
+
+    zlog_fini();
     return true;
 }
 

@@ -210,7 +210,7 @@ func SetName(w http.ResponseWriter, r *http.Request) {
 	ip := vars["param"]
 	ips := strings.Split(ip, DELIM)
 
-	if len(ips) != 1 {
+	if len(ips) != 2 {
 		fmt.Printf("%s\n", ip)
 		fmt.Printf("Expected 1 parameters, found %d\n", len(ips))
 	}

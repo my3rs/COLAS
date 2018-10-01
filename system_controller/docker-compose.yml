@@ -1,32 +1,36 @@
 reader:
-    image: kishori82/dev:COLAS3
-    command: /home/docker/COLAS/src/abdprocess --process-type 0
-    environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+    build: ./
+    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 0 --wait 100  --algorithm ABD  --code reed_solomon
     volumes:
-     - /home/docker:/home/docker
-
+    - /usr/local/lib:/usr/local/lib
+    - /home/cyril/Workspace:/home/cyril/Workspace
+    environment:
+    - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
 
 writer:
-    image: kishori82/dev:COLAS3
-    command: /home/docker/COLAS/src/abdprocess --process-type 1
-    environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+    build: ./
+    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 1 --wait 100  --algorithm ABD  --code reed_solomon
     volumes:
-     - /home/docker:/home/docker
+      - /usr/local/lib:/usr/local/lib
+      - /home/cyril/Workspace:/home/cyril/Workspace
+    environment:
+    - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
 
 server:
-    image: kishori82/dev:COLAS3
-    command: /home/docker/COLAS/src/abdprocess --process-type 2 
-    environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+    build: ./
+    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 2 --filesize 100 --wait 100  --algorithm ABD  --code reed_solomon
     volumes:
-     - /home/docker:/home/docker
+      - /usr/local/lib:/usr/local/lib
+      - /home/cyril/Workspace:/home/cyril/Workspace
+    environment:
+    - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
 
 controller:
-    image: kishori82/dev:COLAS3
-    command: /home/docker/COLAS/src/abdprocess --process-type 3
-    environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/docker/COLAS/src/abd:/home/docker/COLAS/src/soda:/home/docker/COLAS/src/codes:/home/docker/COLAS/src/sodaw
+    build: ./
+    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 3
     volumes:
-     - /home/docker:/home/docker
+      - /usr/local/lib:/usr/local/lib
+      - /home/cyril/Workspace:/home/cyril/Workspace
+    environment:
+    - LD_LIBRARY_PATH=/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw:/usr/local/lib
+
