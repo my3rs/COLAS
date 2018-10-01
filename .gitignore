@@ -10,6 +10,11 @@ src/ZMQ/zmqlibs/*
 
 .idea/
 cmake-debug-build/
+cmake-build-debug/
+
+tools/logParser/.idea/
+tools/logParser/.gitignore
+tools/logParser/.git/
 
 
 abdprocess
