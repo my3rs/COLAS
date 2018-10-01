@@ -1,1 +1,0 @@
-/usr/bin/c++  -g  -rdynamic CMakeFiles/rlnc_example.dir/rlnc_example.cpp.o  -o ../../bin/rlnc_example  -L/home/cyril/Workspace/COLAS/deps/shared_kodocpp  -L/home/cyril/Workspace/COLAS/cmake-build-debug/lib -Wl,-rpath,/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/cmake-build-debug/lib -lkodoc 

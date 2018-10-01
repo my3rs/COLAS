@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC -g  -shared -Wl,-soname,libsoda.so -o ../../lib/libsoda.so CMakeFiles/soda.dir/soda_reader.c.o  -L/home/cyril/Workspace/COLAS/deps/shared_kodocpp  -L/home/cyril/Workspace/COLAS/cmake-build-debug/lib -Wl,-rpath,/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/cmake-build-debug/lib -lzmq -lczmq ../../lib/librlnc_rs.so -lkodoc 

@@ -1,1 +1,0 @@
-/usr/bin/c++ -fPIC -g  -shared -Wl,-soname,libreed.so -o ../../lib/libreed.so CMakeFiles/reed.dir/reed_solomon.cpp.o  -L/home/cyril/Workspace/COLAS/deps/shared_kodocpp  -L/home/cyril/Workspace/COLAS/cmake-build-debug/lib -Wl,-rpath,/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/cmake-build-debug/lib -lkodoc 

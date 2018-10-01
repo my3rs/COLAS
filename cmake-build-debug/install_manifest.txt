@@ -1,5 +1,0 @@
-/usr/local/lib/libabd.so
-/usr/local/lib/librlnc_rs.so
-/usr/local/lib/libsodaw.so
-/usr/local/lib/libbaseprocess.so
-/usr/local/lib/libutilities.so
