@@ -5,7 +5,7 @@ CC=gcc -std=gnu99 -g -DDEBUG
 UTILS=../utilities
 BASEPROCESS=../baseprocess
 CIFLAGS= -I$(UTILS) -I../ZMQ/include  -I../utilities/ -I../baseprocess -I/usr/local/include
-CFLAGS= -lm -L../ZMQ/zmqlibs -lzmq  -L../ZMQ/czmqlibs/lib -lczmq -lpthread -L/usr/local/lib -static -lzlog -lzmq -Wimplicit-function-declaration -fPIC -Wall
+CFLAGS= -lm -L../ZMQ/zmqlibs -lzmq  -L../ZMQ/czmqlibs/lib -lczmq -lpthread -L/usr/local/lib -lzlog -lzmq -Wimplicit-function-declaration -fPIC -Wall
 
 #SOURCES: hwserver.c asyncsrv.c
 UT_DEPS=$(UTILS)/algo_utils.h $(UTILS)/base64.h  $(BASEPROCESS)/client.h $(BASEPROCESS)/server.h

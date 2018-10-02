@@ -13,7 +13,7 @@ import (
 
 /*
 #cgo CFLAGS: -Iabd  -Isodaw  -Iutilities -IZMQ/include
-#cgo LDFLAGS: -Labd  -labd -Lsodaw -lsodaw -lzmq  -Lcodes -lreed -Wl,-rpath=codes
+#cgo LDFLAGS: -L/usr/local/lib  -labd -lsodaw -lzmq  -Lcodes -lreed -Wl,-rpath=codes
 #include "helpers.h"
 */
 import "C"

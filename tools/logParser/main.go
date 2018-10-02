@@ -8,15 +8,17 @@ import (
 
 type (
 	latencyLog struct {
-		ClientID string `json:"client_id"`
-		OpNum    int    `json:"op_num"`
-		DataSize int    `json:"data_size"`
+		Algorithm string `json:"algorithm"`
+		ClientID  string `json:"client_id"`
+		OpNum     int    `json:"op_num"`
+		DataSize  int    `json:"data_size"`
 	}
 
 	throughputLog struct {
-		ClientID string `json:"client_id"`
-		OpNum    int    `json:"op_num"`
-		DataSize int    `json:"data_size"`
+		Algorithm string `json:"algorithm"`
+		ClientID  string `json:"client_id"`
+		OpNum     int    `json:"op_num"`
+		DataSize  int    `json:"data_size"`
 	}
 )
 

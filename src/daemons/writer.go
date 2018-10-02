@@ -12,7 +12,7 @@ import (
 
 /*
 #cgo CFLAGS: -I../abd  -I../sodaw -I../utilities
-#cgo LDFLAGS: -L../abd  -labd  -L../sodaw -lsodaw  -lzmq -lczmq
+#cgo LDFLAGS: -L/usr/local/lib  -labd  -lsodaw  -lzmq -lczmq
 
 #include <helpers.h>
 #include <algo_utils.h>
@@ -83,7 +83,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				//log.Println(len( C.GoString(rawdata)), servers_str)
 				if data.algorithm == "ABD" {
 					abd_data.data = unsafe.Pointer(payload)
-					abd_data.data_size = C.int(payload_size)
+					abd_data.data_size = C.ulong(payload_size)
 					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
 				}
 

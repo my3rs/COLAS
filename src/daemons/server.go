@@ -9,7 +9,7 @@ import (
 
 /*
 #cgo CFLAGS: -I../abd  -I../sodaw
-#cgo LDFLAGS: -L../abd  -labd  -L../sodaw -lsodaw -lzmq -lczmq
+#cgo LDFLAGS: -L/usr/local/lib -labd -lsodaw -lzmq -lczmq 
 #include <abd_server.h>
 #include <stdio.h>
 

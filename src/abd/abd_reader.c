@@ -162,7 +162,7 @@ RawData  *ABD_read(
 
 
     /** log  */
-    sprintf(s_log, "{client_id:\"%s\", op_num:%d, status:0}", client_args->client_id, op_num);
+    sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, status:0}", client_args->client_id, op_num);
     zlog_info(category_latency, s_log);
 
 
@@ -178,7 +178,7 @@ RawData  *ABD_read(
 
     /** log */
     memset(s_log, '0', 2048);
-    sprintf(s_log, "{client_id:\"%s\", op_num:%d, data_size:%d}", client_args->client_id, op_num, max_tag_value->data_size);
+    sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, data_size:%lu}", client_args->client_id, op_num, max_tag_value->data_size);
     zlog_info(category_throughput, s_log);
 
 
@@ -192,7 +192,7 @@ RawData  *ABD_read(
                     );
 
     memset(s_log, '0', 2048);
-    sprintf(s_log, "{client_id:\"%s\", op_num:%d, status:1}", client_args->client_id, op_num);
+    sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, status:1}", client_args->client_id, op_num);
     zlog_info(category_latency, s_log);
 
 

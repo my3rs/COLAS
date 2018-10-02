@@ -2,7 +2,7 @@ package daemons
 
 /*
 #cgo CFLAGS: -I../abd -I../sodaw -I../utilities -I..
-#cgo LDFLAGS: -L../abd  -labd  -L../sodaw -lsodaw -lm
+#cgo LDFLAGS: -L/usr/local/lib  -labd -lsodaw -lm
 #include <abd_client.h>
 #include <sodaw_reader.h>
 #include <helpers.h>

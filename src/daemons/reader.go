@@ -1,7 +1,6 @@
 package daemons
 
 import (
-	"os"
 	"fmt"
 	"log"
 	"math/rand"
@@ -12,7 +11,7 @@ import (
 
 /*
 #cgo CFLAGS: -I../abd -I../sodaw -I../utilities -I../baseprocess -I../ZMQ/include
-#cgo LDFLAGS: -L../abd  -labd  -L../sodaw -lsodaw
+#cgo LDFLAGS: -L/usr/local/lib -labd  -lsodaw
 #include <abd_client.h>
 #include <client.h>
 #include <sodaw_reader.h>
@@ -36,14 +35,6 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	var abd_data *C.RawData
 	var opnum int = 0
 
-	if data.log_latency {
-		log_file_latency, err := os.OpenFile("/home/Cyril/Workspace/logs/readers.log", os.O_RDWR|os.O_CREATE, 0666)
-		if err != nil {
-			fmt.Println("Can not initialize log file!")
-			os.Exit(-1)
-		}
-		defer log_file_latency.Close()
-	}
 
 	for {
 		select {
@@ -92,9 +83,7 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 					abd_data = C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
 
-					if data.log_latency {
 
-					}
 
 					var tmp_ptr unsafe.Pointer = unsafe.Pointer(abd_data.data)
 					var tmp *C.zframe_t = (*C.zframe_t)(tmp_ptr)
@@ -195,7 +184,7 @@ func write_initial_data(cparameters *C.Parameters, parameters *Parameters) {
 
 	if data.algorithm == "ABD" {
 		abd_data.data = unsafe.Pointer(payload)
-		abd_data.data_size = C.int(payload_size)
+		abd_data.data_size = C.ulong(payload_size)
 		C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
 	}
 

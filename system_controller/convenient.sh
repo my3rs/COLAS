@@ -1,8 +1,5 @@
 #!/bin/bash
-#docker-compose down
-#docker commit  tiny_snyder kishori82/dev:COLAS3
-#docker-compose up #reader=1 writer=1 server=1 controller=1
-docker-compose scale reader=2 writer=2 server=7 controller=1
+docker-compose scale reader=95 writer=5 server=5 controller=1
 
 ./system_management setup
 ./system_management setfile_size 10

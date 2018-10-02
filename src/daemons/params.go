@@ -2,7 +2,7 @@ package daemons
 
 /*
 #cgo CFLAGS: -I../abd -I../sodaw -I../utilities -I..
-#cgo LDFLAGS: -L../abd  -labd  -L../sodaw -lsodaw
+#cgo LDFLAGS: -L/usr/local/lib  -labd -lsodaw
 #include <abd_client.h>
 #include <sodaw_reader.h>
 #include <helpers.h>
@@ -52,7 +52,6 @@ type Parameters struct {
 	Wait             uint64
 	Filesize_kb      float64
 	Processtype      uint64
-	log_latency bool
 }
 
 type ClientArgs struct {
@@ -94,12 +93,9 @@ type Params struct {
 	N                uint64
 	coding_algorithm uint32
 	symbol_size      int
-
-	log_latency bool
 }
 
 func InitializeParameters(parameters *Parameters) {
-	data.log_latency =  parameters.log_latency
 	data.readers = make(map[string]bool)
 	data.servers = make(map[string]bool)
 	data.writers = make(map[string]bool)
