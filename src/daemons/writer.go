@@ -1,10 +1,11 @@
 package daemons
 
 import (
+	"os"
 	//	"encoding/base64"
 	"fmt"
 	"log"
-	"math/rand"
+	//"math/rand"
 	"strings"
 	"time"
 	"unsafe"
@@ -27,8 +28,8 @@ import "C"
 func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	active_chan = make(chan bool, 2)
 
-	s1 := rand.NewSource(time.Now().UnixNano())
-	ran := rand.New(s1)
+	//s1 := rand.NewSource(time.Now().UnixNano())
+	//ran := rand.New(s1)
 
 	var client_args *C.ClientArgs
 	var encoding_info *C.EncodeData
@@ -66,6 +67,11 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 		default:
 			if data.active == true && len(data.servers) > 0 {
 				opnum++
+
+				if opnum > 5000 {
+					os.Exit(0)
+				}
+
 				//rand_wait := rand_wait_time()*int64(time.Millisecond) + int64(time.Millisecond)
 				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
 				time.Sleep(time.Duration(rand_wait))
@@ -76,11 +82,13 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				start := time.Now()
 
-				payload_size = uint((parameters.Filesize_kb + float64(ran.Intn(100000000)%5)) * 1024)
+				// todo: cyril 2018/10/06
+				//payload_size = uint((parameters.Filesize_kb + float64(ran.Intn(100000000)%5)) * 1024)
+				payload_size = uint(data.file_size)
+
 				fmt.Printf("payload %d\n", payload_size)
 				payload = C.get_random_data(C.uint(payload_size))
 
-				//log.Println(len( C.GoString(rawdata)), servers_str)
 				if data.algorithm == "ABD" {
 					abd_data.data = unsafe.Pointer(payload)
 					abd_data.data_size = C.ulong(payload_size)

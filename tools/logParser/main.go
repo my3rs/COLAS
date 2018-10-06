@@ -1,41 +1,99 @@
 package main
 
 import (
+	"./latency"
+	"./utils"
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
+	"strings"
 )
 
-type (
-	latencyLog struct {
-		Algorithm string `json:"algorithm"`
-		ClientID  string `json:"client_id"`
-		OpNum     int    `json:"op_num"`
-		DataSize  int    `json:"data_size"`
-	}
+type item struct {
+	DataSize int
+	Inter    float64
+}
 
-	throughputLog struct {
-		Algorithm string `json:"algorithm"`
-		ClientID  string `json:"client_id"`
-		OpNum     int    `json:"op_num"`
-		DataSize  int    `json:"data_size"`
-	}
+var (
+	mid bool = false
+	lat bool = false
 )
-
-// JSON contains a sample string to unmarshal.
-var JSON = `{
-	"client_id": "reader-478430216",
-	"op_num": 2,
-	"data_size": 1126
-}`
 
 func main() {
-	// Unmarshal the JSON string into our variable.
-	var l latencyLog
-	err := json.Unmarshal([]byte(JSON), &l)
+	//latency("ReadLatency.log")
+	m := latency.Latency("write_latency.log")
+	var newM []item
+
+	fmt.Println()
+
+	file, err := os.Open("/home/cyril/Workspace/logs/write_throughput.log")
 	if err != nil {
-		log.Println("ERROR:", err)
-		return
+		log.Fatal(err)
 	}
-	fmt.Println(l)
+
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	scanner.Split(bufio.ScanLines)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		//fmt.Println(line)
+		lr := strings.Split(line, " - ")
+		timeLine := strings.Split(lr[0], " ")[1]
+		_ = timeLine
+		logLine := lr[1]
+
+		var l utils.ThroughputLog
+		err = json.Unmarshal([]byte(logLine), &l)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		if _, exist := m[l.ClientID][l.OpNum]; exist {
+			newM = append(newM, item{l.DataSize, m[l.ClientID][l.OpNum].Inter})
+		}
+
+		if l.OpNum == 2500 {
+			showThroughput(newM)
+		} else if l.OpNum == 4500 {
+			showThroughput(newM)
+		}
+
+	}
+
+	fmt.Println("global")
+	sumDataSize := 0
+	sumTime := 0.0
+	for i := 0; i < len(newM); i++ {
+		sumDataSize += newM[i].DataSize
+		sumTime += newM[i].Inter
+	}
+	fmt.Println(float64(sumDataSize) / sumTime)
+}
+
+func showThroughput(m []item) {
+	sumDataSize := 0
+	sumTime := 0.0
+
+	if !mid {
+		fmt.Println("50%")
+		for i := 0; i < len(m); i++ {
+			sumDataSize += m[i].DataSize
+			sumTime += m[i].Inter
+		}
+		fmt.Println(float64(sumDataSize) / sumTime)
+		mid = true
+	} else if !lat {
+		fmt.Println("90%")
+		for i := 0; i < len(m); i++ {
+			sumDataSize += m[i].DataSize
+			sumTime += m[i].Inter
+		}
+		fmt.Println(float64(sumDataSize) / sumTime)
+		lat = true
+	}
+
 }

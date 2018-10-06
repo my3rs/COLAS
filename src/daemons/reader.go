@@ -1,6 +1,7 @@
 package daemons
 
 import (
+	"os"
 	"fmt"
 	"log"
 	"math/rand"
@@ -68,13 +69,15 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			if data.active == true && len(data.servers) > 0 {
 				opnum++
 
+				if opnum > 5000 {
+					os.Exit(0)
+				}
+
 				//rand_wait := rand_wait_time()*int64(time.Millisecond) + int64(time.Millisecond)
 				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
 				time.Sleep(time.Duration(rand_wait))
 
 				fmt.Printf("%s %d %d %s %s\n", parameters.Server_id, opnum, rand_wait, C.GoString(client_args.servers_str), parameters.port)
-
-				//servers_str := create_server_string_to_C()
 
 				// call the ABD algorithm
 
@@ -83,11 +86,9 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 					abd_data = C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
 
-
-
-					var tmp_ptr unsafe.Pointer = unsafe.Pointer(abd_data.data)
-					var tmp *C.zframe_t = (*C.zframe_t)(tmp_ptr)
+					var tmp *C.zframe_t = (*C.zframe_t)(abd_data.data)
 					C.zframe_destroy(&tmp)
+
 					C.free(unsafe.Pointer(abd_data.tag))
 					C.free(unsafe.Pointer(abd_data))
 

@@ -115,15 +115,6 @@ void writer_process(Parameters parameters) {
         }
 
 
-/*
-        if(parameters.algorithm==soda){
-          char *payload_read = SODA_read("atomic_object", opnum,  encoding_info, client_args);
-        }
-        if(parameters.algorithm==casgc){
-          char *payload_read = SODA_read("atomic_object", opnum,  encoding_info, client_args);
-        }
-*/
-
         free(payload);
     }
 }

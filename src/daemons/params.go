@@ -50,7 +50,7 @@ type Parameters struct {
 	Algorithm        string
 	Coding_algorithm string
 	Wait             uint64
-	Filesize_kb      float64
+	Filesize_kb      float64 // don't use this
 	Processtype      uint64
 }
 
@@ -119,7 +119,7 @@ func InitializeParameters(parameters *Parameters) {
 	data.N = 1
 	data.K = uint64(math.Ceil((float64(data.N) + 1) / 2.0))
 
-	if (parameters.Coding_algorithm == full_vector) {
+	if parameters.Coding_algorithm == full_vector {
 		data.coding_algorithm = 0
 	} else {
 		data.coding_algorithm = 1
@@ -142,13 +142,6 @@ func InitializeParameters(parameters *Parameters) {
 
 	data.active = false
 
-	/*
-		data.active = true
-		data.algorithm = "SODAW"
-		data.servers["172.17.0.2"] = true
-		data.servers["172.17.0.3"] = true
-		data.servers["172.17.0.4"] = true
-	*/
 }
 
 func ReinitializeParameters() {

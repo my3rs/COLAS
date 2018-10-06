@@ -31,20 +31,28 @@ RawData *  ABD_get_max_tag_value_phase(
 {
     // send out the messages to all servers
     char phase[64];
+    char tag_str[64];
     unsigned int round;
 
-    Tag *tag = (Tag *)malloc(sizeof(Tag)), *recv_tag = (Tag *)malloc(sizeof(Tag));
-    RawData *max_tag_value = (RawData*)malloc(sizeof(RawData));
-    tag->z = -1;
-    max_tag_value->tag = tag;
+//    Tag *tag = (Tag *)malloc(sizeof(Tag)), *recv_tag = (Tag *)malloc(sizeof(Tag));
+//    RawData *max_tag_value = (RawData*)malloc(sizeof(RawData));
+//    tag->z = -1;
+//    max_tag_value->tag = tag;
+
+
+
+    Tag *tag;
+    RawData *max_tag_value;
+    zlist_t *tag_list = zlist_new();
 
     zmq_pollitem_t items [] = { { sock_to_servers, 0, ZMQ_POLLIN, 0 } };
 
     char *types[] = {OBJECT, ALGORITHM, PHASE, OPNUM};
     send_multicast_servers(sock_to_servers, num_servers, types,  4, obj_name, "ABD", GET_TAG_VALUE, &op_num) ;
 
-    unsigned int majority =  ceil(((float)num_servers+1)/2);
-    unsigned int responses =0;
+    unsigned int majority = ceil(((float)num_servers+1)/2);
+    unsigned int responses = 0;
+
     while (true) {
         //  Tick once per second, pulling in arriving messages
         // zmq_pollitem_t items [] = { { sock_to_servers, 0, ZMQ_POLLIN, 0 } };
@@ -68,7 +76,9 @@ RawData *  ABD_get_max_tag_value_phase(
 	        //other frames
 	        get_string_frame(phase, frames, PHASE);
             round = get_int_frame(frames, OPNUM);
-            get_tag_frame(frames, recv_tag);
+//            get_tag_frame(frames, recv_tag);
+
+            get_string_frame(tag_str, frames, TAG);
 
 	        if(DEBUG_MODE)
 	            print_out_hash_in_order(frames, names);
@@ -79,19 +89,27 @@ RawData *  ABD_get_max_tag_value_phase(
                 zframe_t *value_frame = (zframe_t *)zhash_lookup(frames, PAYLOAD);
                 assert(value_frame !=NULL);
 
-                if(compare_tag_ptrs(tag, recv_tag) < 0){
-                    //free the original frame
-                    if(tag->z != -1){
-                        zframe_t *tmp = (zframe_t*)(max_tag_value->data);
-                        zframe_destroy(&tmp);
-                    }
-                    //update max tag
-                    memcpy(tag, recv_tag, sizeof(Tag));
-                    //duplicate frame
-                    zframe_t *dup_value_frame = zframe_dup(value_frame);
-                    max_tag_value->data = (void *)dup_value_frame;
-                    max_tag_value->data_size = zframe_size(dup_value_frame);
-                }
+                tag = (Tag *)malloc(sizeof(Tag));
+                string_to_tag(tag_str, tag);
+                zlist_append(tag_list, (void*)tag);
+
+
+//                if(compare_tag_ptrs(tag, recv_tag) < 0){
+//                    //free the original frame
+//                    if(tag->z != -1){
+//                        zframe_t *tmp = (zframe_t*)(max_tag_value->data);
+//                        zframe_destroy(&tmp);
+//                    }
+//                    //update max tag
+//                    memcpy(tag, recv_tag, sizeof(Tag));
+//                    //duplicate frame
+//                    zframe_t *dup_value_frame = zframe_dup(value_frame);
+//                    max_tag_value->data = (void *)dup_value_frame;
+//                    max_tag_value->data_size = zframe_size(dup_value_frame);
+//                }
+
+                max_tag_value->data = (void*)value_frame;
+                max_tag_value->data_size = zframe_size(value_frame);
 
                 if(responses >= majority) {
                     zlist_purge(names);
@@ -107,14 +125,17 @@ RawData *  ABD_get_max_tag_value_phase(
             zmsg_destroy (&msg);
         }
     }
-    free(recv_tag);
+    max_tag_value->tag = get_max_tag(tag_list);
+    free_items_in_list(tag_list);
+    zlist_destroy(&tag_list);
+//    free(recv_tag);
     return max_tag_value;
 }
 
 
 RawData  *ABD_read(
     char *obj_name,
-    unsigned int op_num ,
+    unsigned int op_num,
     ClientArgs *client_args
 ) {
     s_catch_signals();
@@ -156,16 +177,12 @@ RawData  *ABD_read(
     printf("\t\tNum of Servers  : %d\n",num_servers);
 #endif
 
-
-
     printf("\tMAX_TAG_VALUE (READER)\n");
 
 
     /** log  */
     sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, status:0}", client_args->client_id, op_num);
     zlog_info(category_latency, s_log);
-
-
 
 
     RawData *max_tag_value = ABD_get_max_tag_value_phase(
@@ -191,12 +208,11 @@ RawData  *ABD_read(
                       max_tag_value
                     );
 
+
+
     memset(s_log, '0', 2048);
     sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, status:1}", client_args->client_id, op_num);
     zlog_info(category_latency, s_log);
-
-
-
 
 
     zlog_fini();

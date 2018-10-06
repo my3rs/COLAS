@@ -123,6 +123,8 @@ void algorithm_ABD_GET_TAG(zhash_t *frames, void *worker) {
 
     printf("\t\tsending...\n,");
     send_frames_at_server(frames, worker, SEND_FINAL, 6,  SENDER, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG);
+
+//    zframe_destroy(tag_frame);
 }
 
 void algorithm_ABD_GET_TAG_VALUE(zhash_t  *frames,  void *worker) {
@@ -139,7 +141,7 @@ void algorithm_ABD_GET_TAG_VALUE(zhash_t  *frames,  void *worker) {
     assert(temp_hash_hash!=NULL);
 
     zlist_t *keys = zhash_keys (temp_hash_hash);
-    assert((int)zlist_size(keys)==1);
+    assert((int)zlist_size(keys) == 1);
 
     void *key = zlist_first(keys);
     assert(key!=NULL);
