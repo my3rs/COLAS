@@ -39,7 +39,7 @@ char **get_memory_for_ipaddresses(int num_ips) {
 
 EncodeData *create_EncodeData(Parameters parameters) ;
 
-RawData *create_RawData(Parameters parameters) ;
+RawData *create_RawData() ;
 
 //ClientArgs *create_ClientArgs(Parameters parameters) ;
 

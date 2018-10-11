@@ -43,7 +43,7 @@ Tag *SODAW_write_get_or_read_get_phase (char *obj_name,
         }
         printf("\t\treceived data\n");
         if (items [0].revents & ZMQ_POLLIN) {
-            zmsg_t *msg = zmsg_recv (sock_to_servers);
+            zmsg_t *msg =   (sock_to_servers);
             assert(msg != NULL);
 
             zlist_t *names = zlist_new();
@@ -86,7 +86,7 @@ Tag *SODAW_write_get_or_read_get_phase (char *obj_name,
         }
     }
 
-    //comute the max tag now and return
+    //compute the max tag now and return
     Tag *max_tag = get_max_tag(tag_list);
     free_items_in_list(tag_list);
     zlist_destroy(&tag_list);

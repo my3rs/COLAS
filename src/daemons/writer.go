@@ -12,10 +12,10 @@ import (
 )
 
 /*
-#cgo CFLAGS: -I../abd  -I../sodaw -I../utilities
-#cgo LDFLAGS: -L/usr/local/lib  -labd  -lsodaw  -lzmq -lczmq
+#cgo CFLAGS: -I../abd -I../sodaw -I../utilities -I../baseprocess -I../ZMQ/include
+#cgo LDFLAGS: -L/usr/local/lib -labd  -lsodaw -lbaseprocess -lutilities
 
-#include <helpers.h>
+#include <../utilities/helpers.h>
 #include <algo_utils.h>
 
 #include <abd_client.h>
@@ -35,7 +35,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	var encoding_info *C.EncodeData
 
 	var payload *C.char
-	var opnum int = 0
+	var opnum int = 1
 	var payload_size uint
 	for {
 		select {
@@ -44,7 +44,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 			if len(data.servers) <= 0 {
 				data.active = false
-				fmt.Println("please set servers,next startporcess")
+				fmt.Println("please set servers, next startporcess")
 				break
 			}
 			for k, v := range data.servers {
@@ -76,7 +76,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
 				time.Sleep(time.Duration(rand_wait))
 
-				var abd_data *C.RawData = C.create_RawData(*cparameters)
+				var abd_data *C.RawData = C.create_RawData()
 
 				fmt.Printf("%s  %d %d %s %s\n", parameters.Server_id, opnum, rand_wait, C.GoString(client_args.servers_str), parameters.port)
 
@@ -84,7 +84,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				// todo: cyril 2018/10/06
 				//payload_size = uint((parameters.Filesize_kb + float64(ran.Intn(100000000)%5)) * 1024)
-				payload_size = uint(data.file_size)
+				payload_size = uint(data.file_size * 1024)
 
 				fmt.Printf("payload %d\n", payload_size)
 				payload = C.get_random_data(C.uint(payload_size))
@@ -92,18 +92,26 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				if data.algorithm == "ABD" {
 					abd_data.data = unsafe.Pointer(payload)
 					abd_data.data_size = C.ulong(payload_size)
+					
 					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
+					
+					
 				}
+
+				
 
 				if data.algorithm == "SODAW" {
 					C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)
 				}
 
+
+				C.free(unsafe.Pointer(payload))
+				C.free(unsafe.Pointer(abd_data))
+
 				elapsed := time.Since(start)
 
 				log.Println(data.run_id, "WRITE", string(data.name), data.write_counter,
 					rand_wait/int64(time.Millisecond), elapsed)
-				//C.free(payload)
 				data.write_counter += 1
 			} else {
 				time.Sleep(5 * 1000 * time.Microsecond)
@@ -141,20 +149,3 @@ func Writer_process(parameters *Parameters) {
 	C.printParameters(cparameters)
 	writer_daemon(&cparameters, parameters)
 }
-
-/*
-//rand_data_file_size := int64(1024 * rand.ExpFloat64() / data.file_size)
-				rand_data_file_size := int64(1024 * data.file_size)
-				rand_data := make([]byte, rand_data_file_size)
-				_ = Generate_random_data(rand_data, rand_data_file_size)
-				encoded := base64.StdEncoding.EncodeToString(rand_data)
-				_ = encoded
-				_ = object_name
-				rawdata := C.CString(encoded)
-				//	defer C.free(unsafe.Pointer(&rawdata))
-				//servers_str := create_server_string_to_C()
-				defer C.free(unsafe.Pointer(&rawdata))
-
-				C.free(unsafe.Pointer(rawdata))
-
-*/

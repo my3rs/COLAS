@@ -14,7 +14,7 @@
 #include "abd_client.h"
 
 
-RawData * ABD_read(
+void ABD_read(
                 char *obj_name,
                 unsigned int op_num,
                 ClientArgs *client_args

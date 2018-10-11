@@ -4,7 +4,6 @@ import (
 	"os"
 	"fmt"
 	"log"
-	"math/rand"
 	"strings"
 	"time"
 	"unsafe"
@@ -21,7 +20,7 @@ import (
 #include <sodaw_writer.h>
 #include <abd_writer.h>
 
-#include <helpers.h>
+#include <../utilities/helpers.h>
 */
 import "C"
 
@@ -33,7 +32,7 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	var client_args *C.ClientArgs
 	var encoding_info *C.EncodeData
 	var data_read_c *C.char
-	var abd_data *C.RawData
+	// var abd_data *C.RawData
 	var opnum int = 0
 
 
@@ -84,26 +83,15 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				start := time.Now()
 				if data.algorithm == "ABD" {
 
-					abd_data = C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
+					C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
 
-					var tmp *C.zframe_t = (*C.zframe_t)(abd_data.data)
-					C.zframe_destroy(&tmp)
+					// var tmp *C.zframe_t = (*C.zframe_t)(abd_data.data)
+					// C.zframe_destroy(&tmp)
 
-					C.free(unsafe.Pointer(abd_data.tag))
-					C.free(unsafe.Pointer(abd_data))
+					// C.free(unsafe.Pointer(abd_data.tag))
+					// C.free(unsafe.Pointer(abd_data))
 
-					/*
-						data_read_c = nil
-						 C.ABD_read(
-						data_read_c = nil /* C.ABD_read(
-						C.CString(object_name),
-						C.CString(data.name),
-						(C.uint)(data.write_counter),
-						C.CString(servers_str),
-						C.CString(data.port))*/
-
-					//data_read = C.GoString(data_read_c)
-					//            C.free(unsafe.Pointer(&data_read_c))
+					
 				}
 
 				// call the SODAW algorithm
@@ -112,20 +100,10 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 					payload_read = C.SODAW_read(C.CString("atomic_object"), C.uint(opnum), encoding_info, client_args)
 					_ = payload_read
 
-					/*
-						data_read_c = nil  C.SODAW_read(
-						C.CString(object_name),
-						C.CString(data.name),
-						(C.uint)(data.write_counter),
-						C.CString(servers_str),
-						C.CString(data.port))
-					*/
-
-					//	data_read = C.GoString(data_read_c)
+					
 				}
 
 				elapsed := time.Since(start)
-				//log.Println(data.run_id, "READ", string(data.name), data.write_counter, rand_wait/int64(time.Millisecond), elapsed, len(data_read))
 				log.Println(data.run_id, "READ", string(data.name), data.write_counter, rand_wait/int64(time.Millisecond), elapsed)
 				time.Sleep(5 * 1000 * time.Microsecond)
 				C.free(unsafe.Pointer(data_read_c))
@@ -173,25 +151,22 @@ func write_initial_data(cparameters *C.Parameters, parameters *Parameters) {
 	var payload_size uint
 	var payload *C.char
 
-	s1 := rand.NewSource(time.Now().UnixNano())
-	ran := rand.New(s1)
-
-	payload_size = uint((parameters.Filesize_kb + float64(ran.Intn(100000000)%5)) * 1024)
+	// payload_size = uint(parameters.Filesize_kb * 1024)
+	payload_size = uint(data.file_size * 1024)
 	payload = C.get_random_data(C.uint(payload_size))
 
 	var client_args *C.ClientArgs = C.create_ClientArgs(*cparameters)
 	var encoding_info *C.EncodeData = C.create_EncodeData(*cparameters)
-	var abd_data *C.RawData = C.create_RawData(*cparameters)
+	var abd_data *C.RawData = C.create_RawData()
 
 	if data.algorithm == "ABD" {
 		abd_data.data = unsafe.Pointer(payload)
 		abd_data.data_size = C.ulong(payload_size)
 		C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
-	}
-
-	if data.algorithm == "SODAW" {
+	} else if data.algorithm == "SODAW" {
 		C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)
 	}
 
 	C.free(unsafe.Pointer(payload))
+	C.free(unsafe.Pointer(abd_data))
 }

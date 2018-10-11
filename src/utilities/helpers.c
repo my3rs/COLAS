@@ -86,7 +86,7 @@ void printParameters(Parameters parameters) {
 
 
 
-RawData *create_RawData(Parameters parameters) {
+RawData *create_RawData() {
     RawData *raw_data  = (RawData *)malloc(sizeof(RawData));
     return raw_data;
 }

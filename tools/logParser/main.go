@@ -1,7 +1,6 @@
 package main
 
 import (
-	"./latency"
 	"./utils"
 	"bufio"
 	"encoding/json"
@@ -11,29 +10,30 @@ import (
 	"strings"
 )
 
-type item struct {
-	DataSize int
-	Inter    float64
-}
-
 var (
 	mid bool = false
 	lat bool = false
 )
 
 func main() {
-	//latency("ReadLatency.log")
-	m := latency.Latency("write_latency.log")
-	var newM []item
+	fmt.Println("===========READER===========")
+	parse("R.log")
 
 	fmt.Println()
+	fmt.Println("===========WRITER===========")
+	parse("W.log")
+}
 
-	file, err := os.Open("/home/cyril/Workspace/logs/write_throughput.log")
+func parse(fileName string) map[string]map[int]*utils.LogItem {
+	filePath := "/home/cyril/Workspace/logs/"
+	file, err := os.Open(filePath + fileName)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer file.Close()
+
+	m := make(map[string]map[int]*utils.LogItem)
 
 	scanner := bufio.NewScanner(file)
 	scanner.Split(bufio.ScanLines)
@@ -46,54 +46,63 @@ func main() {
 		_ = timeLine
 		logLine := lr[1]
 
-		var l utils.ThroughputLog
+		var l utils.LogLine
 		err = json.Unmarshal([]byte(logLine), &l)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		if _, exist := m[l.ClientID][l.OpNum]; exist {
-			newM = append(newM, item{l.DataSize, m[l.ClientID][l.OpNum].Inter})
+		if m[l.ClientID] == nil {
+			m[l.ClientID] = make(map[int]*utils.LogItem)
 		}
-
-		if l.OpNum == 2500 {
-			showThroughput(newM)
-		} else if l.OpNum == 4500 {
-			showThroughput(newM)
+		if m[l.ClientID][l.OpNum] == nil {
+			m[l.ClientID][l.OpNum] = &utils.LogItem{l.Latency, l.DataSize, l.Inter}
+		} else {
+			log.Fatal("ERROR")
+			os.Exit(-1)
 		}
 
 	}
 
-	fmt.Println("global")
-	sumDataSize := 0
-	sumTime := 0.0
-	for i := 0; i < len(newM); i++ {
-		sumDataSize += newM[i].DataSize
-		sumTime += newM[i].Inter
-	}
-	fmt.Println(float64(sumDataSize) / sumTime)
+	showLatency(m)
+	showThroughput(m)
+
+	return m
 }
 
-func showThroughput(m []item) {
-	sumDataSize := 0
-	sumTime := 0.0
+func showLatency(m map[string]map[int]*utils.LogItem) {
+	var maxLatency float64 = 0
+	var sumLatency float64 = 0
+	var num int = 0
 
-	if !mid {
-		fmt.Println("50%")
-		for i := 0; i < len(m); i++ {
-			sumDataSize += m[i].DataSize
-			sumTime += m[i].Inter
+	for _, v := range m {
+		for _, item := range v {
+			num++
+			sumLatency += item.Latency
+
+			if item.Latency > maxLatency {
+				maxLatency = item.Latency
+			}
 		}
-		fmt.Println(float64(sumDataSize) / sumTime)
-		mid = true
-	} else if !lat {
-		fmt.Println("90%")
-		for i := 0; i < len(m); i++ {
-			sumDataSize += m[i].DataSize
-			sumTime += m[i].Inter
-		}
-		fmt.Println(float64(sumDataSize) / sumTime)
-		lat = true
 	}
 
+	fmt.Println("avg latency: ", sumLatency/float64(num), "ms")
+	fmt.Println("max latency: ", maxLatency, "ms")
+
+}
+
+func showThroughput(m map[string]map[int]*utils.LogItem) {
+	sumDataSize := 0
+	sumInter := 0.0
+	num := 0
+
+	for _, v := range m {
+		for _, item := range v {
+			num++
+			sumDataSize += item.DataSize
+			sumInter += item.Inter
+		}
+	}
+
+	fmt.Println("throughput: ", float64(sumDataSize)*1000/sumInter/1024.0/1024.0, "MB/s")
 }

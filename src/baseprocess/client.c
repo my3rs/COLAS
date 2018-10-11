@@ -79,7 +79,7 @@ void send_multicast_servers(void *sock_to_servers, int num_servers, char *names[
                 if( strcmp(names[j], OPNUM)==0)
                     printf("\t\t\tFRAME%d :%s  %u\n",j, names[j], *((unsigned int *)values[j]) );
                 else if( strcmp(names[j], PAYLOAD)==0)
-                    printf("\t\t\tFRAME%d :%s  %lu\n", j, names[j],  ((RawData *)values[j])->data_size);
+                    printf("\t\t\tFRAME%d :%s  %d\n", j, names[j],  ((RawData *)values[j])->data_size);
                 else{
                     printf("\t\t\tFRAME%d :%s  %s\n", j, names[j],   (char *)values[j]);
 		}
@@ -102,7 +102,7 @@ void send_multicast_servers(void *sock_to_servers, int num_servers, char *names[
             if( strcmp(names[j], OPNUM)==0) {
                 printf("\t\t\tFRAME%d :%s  %u\n", j, names[j],   *((unsigned int *)values[j]) );
             } else if( strcmp(names[j], PAYLOAD)==0) {
-                printf("\t\t\tFRAME%d :%s  %lu\n", j, names[j],  ((RawData *)values[j])->data_size);
+                printf("\t\t\tFRAME%d :%s  %d\n", j, names[j],  ((RawData *)values[j])->data_size);
             } else {
                 printf("\t\t\tFRAME%d :%s  %s\n", j, names[j],   (char *)values[j]);
             }
@@ -251,16 +251,15 @@ zhash_t *receive_message_frames_at_client(zmsg_t *msg, zlist_t *names)  {
 
 void *get_socket_servers(ClientArgs *client_args) {
     int j;
-    static int socket_create = 0;
-    static void *sock_to_servers = 0;
+    static int socket_create=0;
+    static void *sock_to_servers =0;
 
-    if(socket_create == 1)
-        return sock_to_servers;
+    if( socket_create==1) return sock_to_servers;
 
     int num_servers = count_num_servers(client_args->servers_str);
     char **servers = create_server_names(client_args->servers_str);
 
-    socket_create = 1;
+    socket_create=1;
     zctx_t *ctx  = zctx_new();
     sock_to_servers = zsocket_new(ctx, ZMQ_DEALER);
     assert (sock_to_servers);
@@ -273,7 +272,6 @@ void *get_socket_servers(ClientArgs *client_args) {
         free(destination);
     }
 
-    zctx_destroy(&ctx);
     return sock_to_servers;
 }
 

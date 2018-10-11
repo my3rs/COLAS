@@ -9,6 +9,7 @@
  * */
 
 #include <zlog.h>
+#include <time.h>
 #include "abd_client.h"
 #include "abd_reader.h"
 
@@ -19,31 +20,26 @@ extern int s_interrupted;
 
 #ifdef ASLIBRARY
 #define DEBUG_MODE 1
+#undef DEBUG_MODE
 
 
 // this fetches the max tag and value
 
 RawData *  ABD_get_max_tag_value_phase(
-    char *obj_name,
-    unsigned int op_num,
-    zsock_t *sock_to_servers,
-    unsigned int num_servers)
+        char *obj_name,
+        unsigned int op_num,
+        zsock_t *sock_to_servers,
+        unsigned int num_servers,
+        log_item* log)
 {
     // send out the messages to all servers
     char phase[64];
-    char tag_str[64];
     unsigned int round;
 
-//    Tag *tag = (Tag *)malloc(sizeof(Tag)), *recv_tag = (Tag *)malloc(sizeof(Tag));
-//    RawData *max_tag_value = (RawData*)malloc(sizeof(RawData));
-//    tag->z = -1;
-//    max_tag_value->tag = tag;
-
-
-
-    Tag *tag;
-    RawData *max_tag_value;
-    zlist_t *tag_list = zlist_new();
+    Tag *tag = (Tag *)malloc(sizeof(Tag)), *recv_tag = (Tag *)malloc(sizeof(Tag));
+    RawData *max_tag_value = (RawData*)malloc(sizeof(RawData));
+    tag->z = -1;
+    max_tag_value->tag = tag;
 
     zmq_pollitem_t items [] = { { sock_to_servers, 0, ZMQ_POLLIN, 0 } };
 
@@ -53,9 +49,11 @@ RawData *  ABD_get_max_tag_value_phase(
     unsigned int majority = ceil(((float)num_servers+1)/2);
     unsigned int responses = 0;
 
+
+    clock_t res_start = clock();
+
     while (true) {
-        //  Tick once per second, pulling in arriving messages
-        // zmq_pollitem_t items [] = { { sock_to_servers, 0, ZMQ_POLLIN, 0 } };
+        // Tick once per second, pulling in arriving messages
         printf("\t\twaiting for data...\n");
         int rc = zmq_poll(items, 1, -1);
 
@@ -68,81 +66,135 @@ RawData *  ABD_get_max_tag_value_phase(
 
         if (items [0].revents & ZMQ_POLLIN) {
             zmsg_t *msg = zmsg_recv(sock_to_servers);
-	        assert(msg!=NULL);
+            assert(msg != NULL);
 
+            // TODO: names 是做什么用的？
             zlist_t *names = zlist_new();
             zhash_t *frames = receive_message_frames_at_client(msg, names);
 
-	        //other frames
-	        get_string_frame(phase, frames, PHASE);
+
+
+            if (names != NULL) {
+                zlist_purge(names);
+                zlist_destroy(&names);
+                names = NULL;
+            }
+
+            //other frames
+            get_string_frame(phase, frames, PHASE);
             round = get_int_frame(frames, OPNUM);
-//            get_tag_frame(frames, recv_tag);
+            get_tag_frame(frames, recv_tag);
 
-            get_string_frame(tag_str, frames, TAG);
 
-	        if(DEBUG_MODE)
-	            print_out_hash_in_order(frames, names);
+#ifdef DEBUG_MODE
+            print_out_hash_in_order(frames, names);
+#endif
 
-	        if(round==op_num && strcmp(phase, GET_TAG_VALUE)==0) {
+
+            if (round == op_num && strcmp(phase, GET_TAG_VALUE) == 0) {
                 responses++;
 
-                zframe_t *value_frame = (zframe_t *)zhash_lookup(frames, PAYLOAD);
-                assert(value_frame !=NULL);
-
-                tag = (Tag *)malloc(sizeof(Tag));
-                string_to_tag(tag_str, tag);
-                zlist_append(tag_list, (void*)tag);
+                zframe_t *value_frame = (zframe_t *) zhash_lookup(frames, PAYLOAD);
+                assert(value_frame != NULL);
 
 
-//                if(compare_tag_ptrs(tag, recv_tag) < 0){
-//                    //free the original frame
-//                    if(tag->z != -1){
-//                        zframe_t *tmp = (zframe_t*)(max_tag_value->data);
+                if (compare_tag_ptrs(tag, recv_tag) < 0) {
+                    //free the original frame
+                    if (tag->z != -1) {
+                        zframe_t *tmp = (zframe_t *) (max_tag_value->data);
+                        zframe_destroy(&tmp);
+                        max_tag_value->data = NULL;
+                    }
+
+
+                    //duplicate frame
+                    zframe_t *dup_value_frame = zframe_dup(value_frame);
+                    max_tag_value->data = (void *)dup_value_frame;
+                    max_tag_value->data_size = zframe_size(value_frame);
+
+                    // free old data associated with the old tag
+//                    if (max_tag_value->data != NULL) {
+//                        zframe_t *tmp = (zframe_t *) (max_tag_value->data);
 //                        zframe_destroy(&tmp);
 //                    }
-//                    //update max tag
-//                    memcpy(tag, recv_tag, sizeof(Tag));
-//                    //duplicate frame
-//                    zframe_t *dup_value_frame = zframe_dup(value_frame);
-//                    max_tag_value->data = (void *)dup_value_frame;
+
+
+                    //update max tag
+                    memcpy(tag, recv_tag, sizeof(Tag));
+
+                    // update data
+//                    max_tag_value->data = (void *) value_frame;
 //                    max_tag_value->data_size = zframe_size(dup_value_frame);
-//                }
+//                    max_tag_value->data_size = zframe_size(value_frame);
+                }
 
-                max_tag_value->data = (void*)value_frame;
-                max_tag_value->data_size = zframe_size(value_frame);
+                log->data_size += max_tag_value->data_size;
 
-                if(responses >= majority) {
-                    zlist_purge(names);
-                    zlist_destroy(&names);
-                    zmsg_destroy (&msg);
-                    destroy_frames(frames);
+
+
+                if (responses >= majority) {
+
+                    if (msg != NULL) {
+                        zmsg_destroy(&msg);
+                        msg = NULL;
+                    }
+
+                    if (frames != NULL) {
+                        destroy_frames(frames);
+                        frames = NULL;
+                    }
+
+
                     break;
                 }
+
+
+
 
             } else {
                 printf("\tOLD MESSAGES : (%s, %d)\n", phase, op_num);
             }
-            zmsg_destroy (&msg);
+
+
+            if (msg != NULL) {
+                zmsg_destroy(&msg);
+                msg = NULL;
+            }
+//
+//            if (frames != NULL) {
+//                destroy_frames(frames);
+//                frames = NULL;
+//            }
+
         }
     }
-    max_tag_value->tag = get_max_tag(tag_list);
-    free_items_in_list(tag_list);
-    zlist_destroy(&tag_list);
-//    free(recv_tag);
+
+    clock_t res_finish = clock();
+
+    log->inter = (res_finish - res_start) * 1000.0 / CLOCKS_PER_SEC;
+
+
+    free(recv_tag);
     return max_tag_value;
 }
 
 
-RawData  *ABD_read(
-    char *obj_name,
-    unsigned int op_num,
-    ClientArgs *client_args
+void  ABD_read(
+        char *obj_name,
+        unsigned int op_num,
+        ClientArgs *client_args
 ) {
     s_catch_signals();
 
     int num_servers = count_num_servers(client_args->servers_str);
-    void *sock_to_servers= get_socket_servers(client_args);
+    void *sock_to_servers = get_socket_servers(client_args);
     char s_log[2048];
+
+    log_item log;
+    log.inter = .0;
+    log.latency = .0;
+    log.data_size = 0;
+    log.op_num = op_num;
 
     int rc = zlog_init("/home/cyril/Workspace/config/zlog.conf");
     if (rc) {
@@ -150,22 +202,24 @@ RawData  *ABD_read(
         exit(-1);
     }
 
-    zlog_category_t *category_latency = zlog_get_category("read_latency");
-    if (!category_latency) {
-        printf("can not get read_latency category\n");
+    zlog_category_t *category_reader = zlog_get_category("reader");
+    if (!category_reader) {
+        printf("can not get reader category\n");
         zlog_fini();
         exit(-2);
     }
-
-    zlog_category_t *category_throughput = zlog_get_category("read_throughput");
-    if (!category_throughput) {
-        printf("can not get read_throughput category\n");
+    zlog_category_t *category_writer = zlog_get_category("writer");
+    if (!category_writer) {
+        printf("can not get writer category\n");
         zlog_fini();
         exit(-2);
     }
 
     printf("READ %d\n", op_num);
 
+#ifdef DEBUG_MODE
+#undef DEBUG_MODE
+#endif
 
 #ifdef DEBUG_MODE
     printf("\t\tObj name       : %s\n",obj_name);
@@ -180,45 +234,56 @@ RawData  *ABD_read(
     printf("\tMAX_TAG_VALUE (READER)\n");
 
 
-    /** log  */
-    sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, status:0}", client_args->client_id, op_num);
-    zlog_info(category_latency, s_log);
-
+    clock_t read_start = clock();
 
     RawData *max_tag_value = ABD_get_max_tag_value_phase(
-				obj_name,
-                op_num,
-                sock_to_servers,
-                num_servers
-               );
+            obj_name,
+            op_num,
+            sock_to_servers,
+            num_servers,
+            &log
+    );
 
+    clock_t read_finish = clock();
+    log.latency = (read_finish - read_start) * 1.0 / CLOCKS_PER_SEC * 1000;
 
     /** log */
-    memset(s_log, '0', 2048);
-    sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, data_size:%lu}", client_args->client_id, op_num, max_tag_value->data_size);
-    zlog_info(category_throughput, s_log);
+    sprintf(s_log, "{\"client_id\":\"%s\", \"op_num\":%d, \"latency\": %f, \"data_size\":%lu , \"inter\": %f}",
+            client_args->client_id, log.op_num, log.data_size, log.latency, log.inter);
+
+    zlog_info(category_reader, s_log);
 
 
     printf("\tWRITE_VALUE (READER)\n");
+
+    memset((void*)&log, 0, sizeof(log_item));
+    log.op_num = op_num;
+
+    clock_t write_start = clock();
     ABD_write_value_phase(
-                      obj_name,
-                      op_num,
-                      sock_to_servers,
-                      num_servers,
-                      max_tag_value
-                    );
+            obj_name,
+            op_num,
+            sock_to_servers,
+            num_servers,
+            max_tag_value,
+            &log
+    );
+    clock_t write_finish = clock();
+    log.latency = (write_finish - write_start) * 1.0 / CLOCKS_PER_SEC;
 
+    sprintf(s_log, "{\"client_id\":\"%s\", \"op_num\":%d, \"latency\": %f, \"data_size\":%lu , \"inter\": %f}",
+            client_args->client_id, log.op_num, log.data_size, log.latency, log.inter);
 
+    zlog_info(category_writer, s_log);
 
-    memset(s_log, '0', 2048);
-    sprintf(s_log, "{algorithm:\"ABD\", client_id:\"%s\", op_num:%d, status:1}", client_args->client_id, op_num);
-    zlog_info(category_latency, s_log);
 
 
     zlog_fini();
 
-
-    return max_tag_value;
+    zframe_t *tmp = (zframe_t*)(max_tag_value->data);
+    zframe_destroy(&tmp);
+    free(max_tag_value->tag);
+    free(max_tag_value);
 }
 
 

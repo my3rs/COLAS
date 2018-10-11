@@ -519,5 +519,6 @@ void insertIntoHashAndList(const char* TYPE,
                            zhash_t *frames,
                            zlist_t *names) {
     insertIntoHash(TYPE, msg, frames);
-    if(names!=NULL) zlist_append(names, TYPE);
+    if(names!=NULL)
+        zlist_append(names, TYPE);
 }

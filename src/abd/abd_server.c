@@ -191,11 +191,7 @@ void algorithm_ABD(zhash_t *frames, void *worker, void *_server_args) {
         algorithm_ABD_GET_TAG_VALUE(frames, worker);
     }
 
-    /* zframe_t *payloadf= zmsg_pop (msg);
-            printf("%d\n",  (int)zframe_size(payloadf));
 
-    if(  get_uint_frame(frames, OPNUM) >400) exit(0);
-    */
 }
 
 #endif

@@ -6,23 +6,18 @@ import (
 )
 
 type (
-	LatencyLog struct {
-		Algorithm string `json:"algorithm"`
-		ClientID  string `json:"client_id"`
-		OpNum     int    `json:"op_num"`
-		Status    int    `json:"status"`
+	LogLine struct {
+		ClientID string  `json:"client_id"`
+		OpNum    int     `json:"op_num"`
+		Latency  float64 `json:"latency"`
+		DataSize int     `json:"data_size"`
+		Inter    float64 `json:"inter"`
 	}
 
-	LatencyItem struct {
-		Start string
-		Inter float64
-	}
-
-	ThroughputLog struct {
-		Algorithm string `json:"algorithm"`
-		ClientID  string `json:"client_id"`
-		OpNum     int    `json:"op_num"`
-		DataSize  int    `json:"data_size"`
+	LogItem struct {
+		Latency  float64
+		DataSize int
+		Inter    float64
 	}
 
 	timeCustom struct {

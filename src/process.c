@@ -72,11 +72,12 @@ void reader_process(Parameters parameters) {
 
         RawData *abd_data;
         if(parameters.algorithm==abd)  {
-          abd_data = ABD_read(obj_name, opnum, client_args);
-          zframe_t *tmp = (zframe_t*)(abd_data->data);
-          zframe_destroy(&tmp);
-          free(abd_data->tag);
-          free(abd_data);
+            ABD_read(obj_name, opnum, client_args);
+//          abd_data = ABD_read(obj_name, opnum, client_args);
+//          zframe_t *tmp = (zframe_t*)(abd_data->data);
+//          zframe_destroy(&tmp);
+//          free(abd_data->tag);
+//          free(abd_data);
         }
 
 
@@ -121,10 +122,10 @@ void writer_process(Parameters parameters) {
 
 void write_initial_data(Parameters parameters) {
 
-    unsigned int opnum=1;
-    unsigned int filesize = (unsigned int) (parameters.filesize_kb*1024);
+    unsigned int opnum = 1;
+    unsigned int filesize = (unsigned int) (parameters.filesize_kb * 1024);
 
-    unsigned int payload_size=filesize;
+    unsigned int payload_size = filesize;
     char *payload = get_random_data(filesize);
     printf("create random data\n");
 
