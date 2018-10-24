@@ -11,7 +11,6 @@ extern int s_interrupted;
 extern Server_Status *status;
 extern Server_Status *server_args;
 
-#ifdef ASLIBRARY
 static zhash_t *hash_object_ABD;
 
 static int initialized = 0;
@@ -40,20 +39,10 @@ void algorithm_ABD_WRITE_VALUE( zhash_t *frames, void *worker) {
     Tag local_tag;
     get_object_tag(hash_object_ABD, object_name, &local_tag);
 
-//    if( DEBUG_MODE )printf("\t\t WRITE TAG for COMP (%d, %s)  (%d, %s)\n", local_tag.z, local_tag.id, tag.z, tag.id);
 
-    if( compare_tags(local_tag, tag)==-1 ) {
+    if( compare_tags(local_tag, tag) == -1 ) {
 
         zframe_t *payload_frame= (zframe_t *)zhash_lookup(frames, PAYLOAD);
-
-        if( 0 &&  DEBUG_MODE)  {
-           int size = zframe_size(payload_frame);
-           void *frame_data = zframe_data(payload_frame);
-           char *data =  (char *)malloc(size + 1);
-           memcpy(data, frame_data, size);
-           data[size]='\0';
-           printf("data %s\n", data);
-        }
 
         assert(hash_object_ABD!=NULL);
 
@@ -94,7 +83,9 @@ void algorithm_ABD_WRITE_VALUE( zhash_t *frames, void *worker) {
     } else {
         zframe_t *ack_frame = zframe_new("SUCCESS",strlen("SUCCESS"));
         zhash_insert(frames, "acknowledge", ack_frame);
-        if( DEBUG_MODE ) printf("\t\tSENT BEHIND\n");
+#ifdef DEBUG_MODE
+    printf("\t\tSENT BEHIND\n");
+#endif
     }
 
     get_string_frame(tag_str, frames, PHASE);
@@ -124,7 +115,6 @@ void algorithm_ABD_GET_TAG(zhash_t *frames, void *worker) {
     printf("\t\tsending...\n,");
     send_frames_at_server(frames, worker, SEND_FINAL, 6,  SENDER, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG);
 
-//    zframe_destroy(tag_frame);
 }
 
 void algorithm_ABD_GET_TAG_VALUE(zhash_t  *frames,  void *worker) {
@@ -193,17 +183,3 @@ void algorithm_ABD(zhash_t *frames, void *worker, void *_server_args) {
 
 
 }
-
-#endif
-
-//  The main thread simply starts several clients and a server, and then
-//  waits for the server to finish.
-
-#ifdef ASMAIN
-int main (void) {
-    int i ;
-    zthread_new(server_task, NULL);
-    zclock_sleep(60*60*1000);
-    return 0;
-}
-#endif

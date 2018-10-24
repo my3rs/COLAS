@@ -10,7 +10,7 @@
 
 extern int s_interrupted;
 
-#ifdef ASLIBRARY
+
 #define DEBUG_MODE 1
 
 #undef DEBUG_MODE
@@ -61,14 +61,10 @@ Tag *ABD_get_max_tag_phase(
             round = get_int_frame(frames, OPNUM);
             get_string_frame(tag_str, frames, TAG);
 
-#ifdef DEBUG_MODE
+#ifdef debug_mode
             print_out_hash_in_order(frames, names);
 #endif
-            if (names != NULL) {
-                zlist_purge(names);
-                zlist_destroy(&names);
-                names = NULL;
-            }
+
 
             if(round == op_num && strcmp(phase, GET_TAG) == 0) {
                 responses ++;
@@ -79,28 +75,16 @@ Tag *ABD_get_max_tag_phase(
                 zlist_append(tag_list, (void *)tag);
 
                 if(responses >= majority) {
-                    zmsg_destroy(&msg);
-                    destroy_frames(frames);
-
-                    msg = NULL;
-                    frames = NULL;
-
+					gc_msg_frames_names(msg, frames, names);
+                    
                     break;
                 }
-                //if(responses >= num_servers) break;
             } else {
                 printf("\tOLD MESSAGES : %s  %d\n", phase, op_num);
             }
 
-
-//            if (msg != NULL) {
-//                zmsg_destroy (&msg);
-//                msg = NULL;
-//            }
-//            if (frames != NULL) {
-//                destroy_frames(frames);
-//                frames = NULL;
-//            }
+			gc_msg_frames_names(msg, frames, names);
+           
         }
     }
 
@@ -115,6 +99,14 @@ Tag *ABD_get_max_tag_phase(
     return  max_tag;
 }
 
+void gc_msg_frames_names(zmsg_t *msg, zhash_t *frames, zlist_t *names) {
+    zmsg_destroy(&msg);
+    zlist_purge(names);
+    zlist_destroy(&names);
+	destroy_frames(frames);
+
+    return;
+}
 
 // ABD write
 bool ABD_write(
@@ -134,20 +126,6 @@ bool ABD_write(
     log.latency = 0;
     log.op_num = op_num;
 
-#ifdef DEBUG_MODE
-    printf("\n**************************************************************************\n");
-    printf("\t\tObj name       : %s\n",obj_name);
-    printf("\t\tWriter name    : %s\n",client_args->client_id);
-    printf("\t\tOperation num  : %d\n",op_num);
-    printf("\t\tSize of data   : %d\n",raw_data->data_size);
-
-    printf("\t\tServer string  : %s\n", client_args->servers_str);
-    printf("\t\tPort           : %s\n", client_args->port);
-
-    printf("\t\tNum of Servers  : %d\n",num_servers);
-
-    printf("\n");
-#endif
 
 
     int rc = zlog_init("/home/cyril/Workspace/config/zlog.conf");
@@ -171,8 +149,8 @@ bool ABD_write(
     clock_t write_start = clock();
 
     Tag *max_tag =  ABD_get_max_tag_phase(
-                                       obj_name,  
-                                       op_num, 
+                                       obj_name,
+                                       op_num,
                                        sock_to_servers, 
                                        num_servers
                                        );
@@ -205,61 +183,3 @@ bool ABD_write(
     zlog_fini();
     return true;
 }
-
-#endif
-
-
-//  The main thread simply starts several clients and a server, and then
-//  waits for the server to finish.
-//#define ASMAIN
-
-#ifdef ASMAIN
-
-int main (void) {
-    int i ;
-
-    char *payload = (char *)malloc(100000000*sizeof(char));
-    unsigned int size = 100000000*sizeof(char);
-
-    /*
-       char *servers[]= {
-                         "172.17.0.7", "172.17.0.5",
-                         "172.17.0.4", "172.17.0.6",
-                         "172.17.0.3"
-                       };
-
-    */
-
-    /*
-       char *servers[] = {
-    "172.17.0.22", "172.17.0.21", "172.17.0.18", "172.17.0.17", "172.17.0.20", "172.17.0.16", "172.17.0.19", "172.17.0.15", "172.17.0.14", "172.17.0.13", "172.17.0.12", "172.17.0.11", "172.17.0.10", "172.17.0.9", "172.17.0.7", "172.17.0.8", "172.17.0.6", "172.17.0.5", "172.17.0.4", "172.17.0.3"
-                         };
-    */
-
-    char *servers[]= {
-        "172.17.0.2"
-    };
-
-
-    unsigned int num_servers = 1;
-    char port[]= {PORT};
-
-    char writer_id[] = { "writer_1"};
-    char obj_name[] = {OBJECT};
-
-    unsigned int op_num;
-    s_catch_signals();
-
-    for( i=0; i < 5; i++) {
-        printf("\nWRITE %d\n", i);
-        //ABD_write(obj_name, writer_id, i,  payload, size, servers, port);
-    }
-
-//   zclock_sleep(50*1000);
-    return 0;
-}
-
-
-
-
-#endif

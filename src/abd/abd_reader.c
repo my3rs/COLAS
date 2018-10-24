@@ -18,9 +18,15 @@
 
 extern int s_interrupted;
 
-#ifdef ASLIBRARY
 #define DEBUG_MODE 1
 #undef DEBUG_MODE
+
+void destroy_ABD_Data(RawData *abd_data) {
+    zframe_t *tmp = (zframe_t *)(abd_data->data);
+    zframe_destroy(&tmp);
+    free(abd_data->tag);
+    free(abd_data);
+}
 
 
 // this fetches the max tag and value
@@ -68,28 +74,19 @@ RawData *  ABD_get_max_tag_value_phase(
             zmsg_t *msg = zmsg_recv(sock_to_servers);
             assert(msg != NULL);
 
-            // TODO: names 是做什么用的？
             zlist_t *names = zlist_new();
             zhash_t *frames = receive_message_frames_at_client(msg, names);
-
-
-
-            if (names != NULL) {
-                zlist_purge(names);
-                zlist_destroy(&names);
-                names = NULL;
-            }
 
             //other frames
             get_string_frame(phase, frames, PHASE);
             round = get_int_frame(frames, OPNUM);
             get_tag_frame(frames, recv_tag);
 
-
 #ifdef DEBUG_MODE
             print_out_hash_in_order(frames, names);
 #endif
 
+           
 
             if (round == op_num && strcmp(phase, GET_TAG_VALUE) == 0) {
                 responses++;
@@ -106,66 +103,35 @@ RawData *  ABD_get_max_tag_value_phase(
                         max_tag_value->data = NULL;
                     }
 
-
                     //duplicate frame
                     zframe_t *dup_value_frame = zframe_dup(value_frame);
                     max_tag_value->data = (void *)dup_value_frame;
                     max_tag_value->data_size = zframe_size(value_frame);
 
-                    // free old data associated with the old tag
-//                    if (max_tag_value->data != NULL) {
-//                        zframe_t *tmp = (zframe_t *) (max_tag_value->data);
-//                        zframe_destroy(&tmp);
-//                    }
-
-
                     //update max tag
                     memcpy(tag, recv_tag, sizeof(Tag));
 
-                    // update data
-//                    max_tag_value->data = (void *) value_frame;
-//                    max_tag_value->data_size = zframe_size(dup_value_frame);
-//                    max_tag_value->data_size = zframe_size(value_frame);
                 }
 
                 log->data_size += max_tag_value->data_size;
 
-
-
                 if (responses >= majority) {
-
-                    if (msg != NULL) {
-                        zmsg_destroy(&msg);
-                        msg = NULL;
-                    }
-
-                    if (frames != NULL) {
-                        destroy_frames(frames);
-                        frames = NULL;
-                    }
-
+                    zlist_purge(names);
+                    zlist_destroy(&names);
+                    zmsg_destroy(&msg);
+                    destroy_frames(frames);
 
                     break;
                 }
-
-
-
 
             } else {
                 printf("\tOLD MESSAGES : (%s, %d)\n", phase, op_num);
             }
 
-
-            if (msg != NULL) {
-                zmsg_destroy(&msg);
-                msg = NULL;
-            }
-//
-//            if (frames != NULL) {
-//                destroy_frames(frames);
-//                frames = NULL;
-//            }
-
+            zlist_purge(names);
+            zlist_destroy(&names);
+            zmsg_destroy(&msg);
+            destroy_frames(frames);
         }
     }
 
@@ -173,13 +139,12 @@ RawData *  ABD_get_max_tag_value_phase(
 
     log->inter = (res_finish - res_start) * 1000.0 / CLOCKS_PER_SEC;
 
-
     free(recv_tag);
     return max_tag_value;
 }
 
 
-void  ABD_read(
+RawData*  ABD_read(
         char *obj_name,
         unsigned int op_num,
         ClientArgs *client_args
@@ -217,19 +182,6 @@ void  ABD_read(
 
     printf("READ %d\n", op_num);
 
-#ifdef DEBUG_MODE
-#undef DEBUG_MODE
-#endif
-
-#ifdef DEBUG_MODE
-    printf("\t\tObj name       : %s\n",obj_name);
-    printf("\t\tClient name    : %s\n",client_args->client_id);
-    printf("\t\tOperation num  : %d\n",op_num);
-
-    printf("\t\tServer string   : %s\n", client_args->servers_str);
-    printf("\t\tPort to Use     : %s\n", client_args->port);
-    printf("\t\tNum of Servers  : %d\n",num_servers);
-#endif
 
     printf("\tMAX_TAG_VALUE (READER)\n");
 
@@ -260,6 +212,7 @@ void  ABD_read(
     log.op_num = op_num;
 
     clock_t write_start = clock();
+
     ABD_write_value_phase(
             obj_name,
             op_num,
@@ -280,64 +233,8 @@ void  ABD_read(
 
     zlog_fini();
 
-    zframe_t *tmp = (zframe_t*)(max_tag_value->data);
-    zframe_destroy(&tmp);
-    free(max_tag_value->tag);
-    free(max_tag_value);
+    return max_tag_value;
 }
 
 
-#endif
 
-
-//  The main thread simply starts several clients and a server, and then
-//  waits for the server to finish.
-//#define ASMAIN
-
-#ifdef ASMAIN
-
-int main (void) {
-    int i ;
-
-    char *payload = (char *)malloc(100000000*sizeof(char));
-    unsigned int size = 100000000*sizeof(char);
-
-    /*
-       char *servers[]= {
-                         "172.17.0.7", "172.17.0.5",
-                         "172.17.0.4", "172.17.0.6",
-                         "172.17.0.3"
-                       };
-
-    */
-
-    /*
-       char *servers[] = {
-    "172.17.0.22", "172.17.0.21", "172.17.0.18", "172.17.0.17", "172.17.0.20", "172.17.0.16", "172.17.0.19", "172.17.0.15", "172.17.0.14", "172.17.0.13", "172.17.0.12", "172.17.0.11", "172.17.0.10", "172.17.0.9", "172.17.0.7", "172.17.0.8", "172.17.0.6", "172.17.0.5", "172.17.0.4", "172.17.0.3"
-                         };
-    */
-
-    char *servers[]= {
-        "172.17.0.2"
-    };
-
-
-    unsigned int num_servers = 1;
-    char port[]= {PORT};
-
-    char writer_id[] = { "writer_1"};
-    char obj_name[] = {OBJECT};
-
-    unsigned int op_num;
-    s_catch_signals();
-
-    for( i=0; i < 5; i++) {
-        printf("\nWRITE %d\n", i);
-        //ABD_write(obj_name, writer_id, i,  payload, size, servers, port);
-    }
-
-//   zclock_sleep(50*1000);
-    return 0;
-}
-
-#endif

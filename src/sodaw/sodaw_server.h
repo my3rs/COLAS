@@ -6,42 +6,25 @@
 
 typedef struct _R_C {
     Tag t_r;
-    char reader_opnum[BUFSIZE];
+    int done_by_who;
+    unsigned int opnum;
     char reader_id[BUFSIZE];
 } RegReader;
 
-
-typedef struct _METADATA {
-    Tag t_r;
-    char reader_opnum[BUFSIZE];
-    char serverid[BUFSIZE];
-} MetaData;
-
+typedef struct _HISTORYDATA {
+    char readerid[BUFSIZE];
+    char senderid[BUFSIZE];
+    char read_tag_str[BUFSIZE];
+    char send_tag_str[BUFSIZE];
+    unsigned int   opnum;
+} HistoryData;
 
 void  destroy_regreader(RegReader *r_tr);
-
-void  destroy_metadata(MetaData *r_tr);
-
-//void algorithm_ABD_WRITE_VALUE( zmsg_t *msg, void *worker, char *object_name) ;
-//void algorithm_ABD_GET_TAG( zmsg_t *msg, void *worker, char *object_name) ;
-//void algorithm_ABD_GET_TAG_VALUE( zmsg_t *msg, void *worker, char *object_name) ;
 void algorithm_SODAW(zhash_t *frames, void *worker, void *server_args) ;
-
 void SODAW_initialize();
-
-char *create_a_key_from_metadata(MetaData *m) ;
-
-char *create_a_key_from_readerc(RegReader *m);
-
-void  metadata_remove_keys(zhash_t *metadata, zlist_t *Hr) ;
-
-void  regreader_remove_key(zhash_t *readerc, char *reader) ;
-
-zlist_t *metadata_with_reader(zhash_t *metadata, char *reader) ;
-
-zlist_t *metadata_with_tag_reader(zhash_t *metadata, Tag tag, char *reader) ;
-
-void metadata_disperse(char *object_namae, char *algorithm, MetaData *h);
-
+void historydata_clear_by_readerid_opnum(zhash_t *history_tab, char *readerid, unsigned int opnum);
+void historydata_dump_by_readerid_opnum(zhash_t *history_tab, char *readerid, unsigned int opnum);
+zlist_t *historydata_lookup(zhash_t *history_tab, char *readerid, unsigned int opnum, char *tag_send_str);
+int historydata_count(zhash_t* history_tab, char *readerid, unsigned int opnum);
 void create_metadata_sending_sockets() ;
 #endif

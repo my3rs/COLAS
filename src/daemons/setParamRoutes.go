@@ -169,8 +169,7 @@ func SetReadRateDistribution(w http.ResponseWriter, r *http.Request) {
 	ip := vars["param"]
 	ips := strings.Split(ip, DELIM)
 
-	log.Println("INFO\tSet Inter  Read Wait Time  Distribution\t" + ip)
-	fmt.Println("INFO\tSet Inter  Read Wait Time  Distribution\t" + ip)
+	fmt.Println("INFO\tSet Inter Read Wait Time  Distribution\t" + ip)
 
 	if len(ips) != 3 {
 		fmt.Printf("%s\n", ip)
@@ -186,6 +185,8 @@ func SetReadRateDistribution(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data.inter_read_wait_distribution = []string{name, k}
 	}
+
+
 
 	if data.processType == 3 {
 		send_command_to_processes(data.readers, "SetReadRateDistribution", ip)
@@ -203,10 +204,13 @@ func SetWriteRateDistribution(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("%s\n", ip)
 	name := ips[0]
 
-	log.Println("INFO\tSet Inter Write Wait Time  Distribution--\t" + ip)
+	fmt.Println("INFO\tSet Inter Write Wait Time Distribution--\t" + ip)
+
 	var m string
 	k := ips[1]
 
+
+	// reader or writer
 	if len(ips) > 2 {
 		m = ips[2]
 		data.inter_write_wait_distribution = []string{name, k, m}
@@ -214,11 +218,12 @@ func SetWriteRateDistribution(w http.ResponseWriter, r *http.Request) {
 		data.inter_write_wait_distribution = []string{name, k}
 	}
 
-	log.Println("INFO\tSet Inter Write Wait Time  Distribution\t" + ip)
+	
+	// controller
 	if data.processType == 3 {
 		fmt.Println(data.inter_write_wait_distribution)
-		send_command_to_processes(data.readers, "SetReadWriteDistribution", ip)
-		send_command_to_processes(data.writers, "SetReadWriteDistribution", ip)
+		send_command_to_processes(data.readers, "SetWriteRateDistribution", ip)
+		send_command_to_processes(data.writers, "SetWriteRateDistribution", ip)
 	}
 }
 

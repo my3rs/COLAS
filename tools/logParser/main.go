@@ -17,15 +17,16 @@ var (
 
 func main() {
 	fmt.Println("===========READER===========")
-	parse("R.log")
+	parse("reader.log")
 
 	fmt.Println()
 	fmt.Println("===========WRITER===========")
-	parse("W.log")
+	parse("writer.log")
 }
 
 func parse(fileName string) map[string]map[int]*utils.LogItem {
-	filePath := "/home/cyril/Workspace/logs/"
+	errorCount := 0
+	filePath := "/home/cyril/Workspace/logs/12.7.50.50/"
 	file, err := os.Open(filePath + fileName)
 	if err != nil {
 		log.Fatal(err)
@@ -58,14 +59,19 @@ func parse(fileName string) map[string]map[int]*utils.LogItem {
 		if m[l.ClientID][l.OpNum] == nil {
 			m[l.ClientID][l.OpNum] = &utils.LogItem{l.Latency, l.DataSize, l.Inter}
 		} else {
-			log.Fatal("ERROR")
-			os.Exit(-1)
+			//log.Fatal("ERROR")
+			//os.Exit(-1)
+			//log.Fatal(l.ClientID, l.OpNum, l.Latency, l.DataSize, l.Inter)
+			//log.Fatal(m[l.ClientID][l.OpNum])
+			errorCount++
+			continue
 		}
 
 	}
 
 	showLatency(m)
 	showThroughput(m)
+	fmt.Println(errorCount)
 
 	return m
 }

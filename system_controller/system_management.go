@@ -242,20 +242,6 @@ func setWriteTo(c *cli.Context) error {
 	return nil
 }
 
-//set the write rate
-/*
-func setWriteRate(c *cli.Context) error {
-	if !isSystemRunning() {
-		return nil
-	}
-	rate := c.Args().First()
-	_, _, _, controllers := getIPAddresses()
-	rateString := rate
-	sendCommandToControllers(controllers, "SetWriteRate", rateString)
-	return nil
-}
-*/
-
 //set the file size
 func setFileSize(c *cli.Context) error {
 	if !isSystemRunning() {

@@ -6,6 +6,7 @@ import (
 	"log"
 	"strings"
 	"time"
+	"strconv"
 	"unsafe"
 )
 
@@ -31,8 +32,7 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 	var client_args *C.ClientArgs
 	var encoding_info *C.EncodeData
-	var data_read_c *C.char
-	// var abd_data *C.RawData
+	var abd_data *C.RawData
 	var opnum int = 0
 
 
@@ -68,7 +68,7 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			if data.active == true && len(data.servers) > 0 {
 				opnum++
 
-				if opnum > 5000 {
+				if opnum > 2000 {
 					os.Exit(0)
 				}
 
@@ -83,14 +83,8 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				start := time.Now()
 				if data.algorithm == "ABD" {
 
-					C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
-
-					// var tmp *C.zframe_t = (*C.zframe_t)(abd_data.data)
-					// C.zframe_destroy(&tmp)
-
-					// C.free(unsafe.Pointer(abd_data.tag))
-					// C.free(unsafe.Pointer(abd_data))
-
+					abd_data = C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
+					C.destroy_ABD_Data(abd_data)
 					
 				}
 
@@ -105,10 +99,18 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				elapsed := time.Since(start)
 				log.Println(data.run_id, "READ", string(data.name), data.write_counter, rand_wait/int64(time.Millisecond), elapsed)
-				time.Sleep(5 * 1000 * time.Microsecond)
-				C.free(unsafe.Pointer(data_read_c))
 
 				data.write_counter += 1
+
+				if len(data.inter_read_wait_distribution) == 2 {
+					read_distribution := data.inter_read_wait_distribution[0]
+					read_distance, _ := strconv.Atoi(data.inter_read_wait_distribution[1])
+
+					if read_distribution == "const" {
+						time.Sleep(time.Duration(read_distance) * 1000 * time.Microsecond)
+					}
+					
+				}
 			} else {
 				time.Sleep(5 * time.Microsecond)
 			}

@@ -1,6 +1,7 @@
 package daemons
 
 import (
+	"strconv"
 	"os"
 	//	"encoding/base64"
 	"fmt"
@@ -68,7 +69,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			if data.active == true && len(data.servers) > 0 {
 				opnum++
 
-				if opnum > 5000 {
+				if opnum > 2000 {
 					os.Exit(0)
 				}
 
@@ -94,11 +95,9 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 					abd_data.data_size = C.ulong(payload_size)
 					
 					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
-					
-					
 				}
 
-				
+
 
 				if data.algorithm == "SODAW" {
 					C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)
@@ -113,6 +112,18 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				log.Println(data.run_id, "WRITE", string(data.name), data.write_counter,
 					rand_wait/int64(time.Millisecond), elapsed)
 				data.write_counter += 1
+
+				if len(data.inter_write_wait_distribution) == 2 {
+					write_distribution := data.inter_write_wait_distribution[0]
+					write_distance, _ := strconv.Atoi(data.inter_write_wait_distribution[1])
+
+					if write_distribution == "const" {
+						time.Sleep(time.Duration(write_distance) * 1000 * time.Microsecond)
+					}
+					
+				}
+
+				
 			} else {
 				time.Sleep(5 * 1000 * time.Microsecond)
 			}

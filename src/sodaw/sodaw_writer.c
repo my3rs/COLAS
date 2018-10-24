@@ -15,108 +15,69 @@
 #include <base64.h>
 #include <rlnc_rs.h>
 
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 
 extern int s_interrupted;
 
 #ifdef ASLIBRARY
 
 
-Tag *SODAW_write_get_phase(char *obj_name, unsigned int op_num,
-                           zsock_t *sock_to_servers,
-                           unsigned int num_servers) {
+Tag *SODAW_write_get_phase(char *obj_name,
+	char *client_id,
+	unsigned int op_num,
+        zsock_t *sock_to_servers,
+        unsigned int num_servers) {
 
     return SODAW_write_get_or_read_get_phase(
-               obj_name, "WRITE_GET",   op_num,
-               sock_to_servers,
-               num_servers);
+            obj_name, client_id, "WRITE_GET",   op_num,
+            sock_to_servers,
+            num_servers);
 }
 
 
 
 // this is the write tag value phase of SODAW
 void SODAW_write_put_phase (char *obj_name,
-                            char *writer_id,
-                            unsigned int op_num,
-                            zsock_t *sock_to_servers,
-                            unsigned int num_servers,
-                            Tag max_tag,    // for read it is max and for write it is new
-                            EncodeData *encoded_info) {
+        char *writer_id,
+        unsigned int op_num,
+        zsock_t *sock_to_servers,
+        unsigned int num_servers,
+        Tag max_tag,    // for read it is max and for write it is new
+        EncodeData *encoded_info) {
     // send out the messages to all servers
-    char buf[4000];
     char algorithm[BUFSIZE];
     char phase[BUFSIZE];
     char tag_str[BUFSIZE];
-    char buf1[400];
     char *value;
 
     int N = num_servers;
-
     unsigned int majority =  ceil(((float)num_servers+1)/2);
     int K = majority;
-
     int symbol_size = SYMBOL_SIZE;
 
+    printf("\t\tencoding data..\n");
     if(encode(encoded_info)==FALSE) {
         printf("Failed to encode data \n");
         exit(EXIT_FAILURE);
-    } 
-
-/*
-else {
-        if(checking_decoding(encoded_info)==FALSE) {
-            printf("Failed to decode encoded data \n");
-            exit(EXIT_FAILURE);
-        } else {
-            printf("Successfully decoded encoded data \n");
-        }
     }
-*/
-
-    printf("waiting\n");
-//    destroy_encoded_data(encoded_data_info);
-
+    //send encoded data
+    printf("\t\tsending encoded data..\n");
     unsigned int round;
-
     zmq_pollitem_t items [] = { { sock_to_servers, 0, ZMQ_POLLIN, 0 } };
-
     tag_to_string(max_tag, tag_str);
-
-    char *types[] = {OBJECT, ALGORITHM, PHASE, OPNUM, TAG};
+    char *types[] = {CLIENTID, OBJECT, ALGORITHM, PHASE, OPNUM, TAG};
     int per_server_payload_size =  encoded_info->num_blocks*encoded_info->encoded_symbol_size;
 
-
-/*
-    if(N==3) {
-        sprintf(tag_str, "%s-%x-%x-%x", tag_str,
-                simple_hash(encoded_info->encoded_data[0], per_server_payload_size),
-                simple_hash(encoded_info->encoded_data[1], per_server_payload_size),
-                simple_hash(encoded_info->encoded_data[2], per_server_payload_size)
-               );
-    }
-*/
-
     send_multisend_servers (sock_to_servers, num_servers,
-                            encoded_info->encoded_data, per_server_payload_size,
-                            types,  5, obj_name, "SODAW",
-                            WRITE_PUT,
-                            &op_num, tag_str);
-
-
-    int i;
-    for(i=0; i < encoded_info->N; i++) {
-        free(encoded_info->encoded_data[i]);
-    }
-    free(encoded_info->encoded_data);
-
+            encoded_info->encoded_data, per_server_payload_size,
+            types,  6, writer_id, obj_name, "SODAW",
+            WRITE_PUT, &op_num, tag_str);
 
     unsigned int responses =0;
     int j =0;
-
     Tag *tag;
     while (true) {
         //  Tick once per second, pulling in arriving messages
-
         // zmq_pollitem_t items [] = { { sock_to_servers, 0, ZMQ_POLLIN, 0 } };
         printf("\t\twaiting for data..\n");
         int rc = zmq_poll(items, 1, -1);
@@ -129,21 +90,19 @@ else {
             zmsg_t *msg = zmsg_recv (sock_to_servers);
             //!!
             assert(msg != NULL);
-
             zlist_t *names = zlist_new();
             //!!
             assert(names);
             assert(zlist_size(names) == 0);
 
             zhash_t* frames = receive_message_frames_at_client(msg, names);
+	        if(DEBUG_MODE) print_out_hash_in_order(frames, names);
 
             get_string_frame(phase, frames, PHASE);
-            round = get_int_frame(frames, OPNUM);
+            round = get_uint_frame(frames, OPNUM);
 
             if(round==op_num && strcmp(phase, WRITE_PUT)==0) {
-
-                if(DEBUG_MODE) print_out_hash_in_order(frames, names);
-
+                if(DEBUG_MODE) printf("MATCHED MESSAGE!\n");
                 responses++;
                 if(responses >= majority) {
                     zmsg_destroy (&msg);
@@ -152,10 +111,10 @@ else {
                     zlist_destroy(&names);
                     break;
                 }
-                //if(responses >= num_servers) break;
             } else {
-                printf("\t\tOLD MESSAGES : (%s, %d)\n", phase, op_num);
+                printf("OLD MESSAGES : (phase%s, opnum%d)\n", phase, op_num);
             }
+
             zmsg_destroy (&msg);
             destroy_frames(frames);
             zlist_purge(names);
@@ -168,73 +127,63 @@ else {
 
 // SODAW write
 bool SODAW_write(
-    char *obj_name,
-    unsigned int op_num ,
-    char *payload,
-    unsigned int payload_size,
-    EncodeData *encoded_data,
-    ClientArgs *client_args
-) {
+        char *obj_name,
+        unsigned int op_num ,
+        char *payload,
+        unsigned int payload_size,
+        EncodeData *encoded_data,
+        ClientArgs *client_args
+        ) {
     s_catch_signals();
     int j;
-
     int num_servers = count_num_servers(client_args->servers_str);
 
-#ifndef DEBUG_MODE
+if(DEBUG_MODE){
     printf("\t\tObj name       : %s\n",obj_name);
     printf("\t\tWriter name    : %s\n",client_args->client_id);
     printf("\t\tOperation num  : %d\n",op_num);
     printf("\t\tSize of data   : %d\n", payload_size);
-
     printf("\t\tServer string  : %s\n", client_args->servers_str);
     printf("\t\tPort           : %s\n", client_args->port);
-
     printf("\t\tNum of Servers  : %d\n",num_servers);
-
-    for(j=0; j < num_servers; j++) {
-        printf("\t\tServer : %s\n", servers[j]);
-    }
-    printf("\n");
-#endif
+}
 
     void *sock_to_servers= get_socket_servers(client_args);
 
-    printf("WRITE %d\n", op_num);
     printf("\tWRITE_GET (WRITER)\n");
-
-    Tag *max_tag=  SODAW_write_get_phase(
-                       obj_name,
-                       op_num,
-                       sock_to_servers,
-                       num_servers
-                   );
+    Tag *max_tag=  SODAW_write_get_phase(obj_name,
+	     client_args->client_id,
+            op_num,
+            sock_to_servers,
+            num_servers
+            );
 
     Tag new_tag;
     new_tag.z = max_tag->z + 1;
     strcpy(new_tag.id, client_args->client_id);
     free(max_tag);
+
     printf("\tWRITE_PUT (WRITER)\n");
     encoded_data->raw_data = payload;
     encoded_data->raw_data_size = payload_size;
     SODAW_write_put_phase(
-        obj_name,
-        client_args->client_id,
-        op_num,
-        sock_to_servers,
-        num_servers,
-        new_tag,
-        encoded_data
-    );
-
-
-//!! Why was this turned off? We need to destroy the socket or else it becomes a memory leak
-// as we will constantly generate a new one
+            obj_name,
+            client_args->client_id,
+            op_num,
+            sock_to_servers,
+            num_servers,
+            new_tag,
+            encoded_data
+            );
+    //!! Why was this turned off? We need to destroy the socket or else it becomes a memory leak
+    // as we will constantly generate a new one
     /*
-        zsocket_destroy(ctx, sock_to_servers);
-        zctx_destroy(&ctx);
-        destroy_server_names(servers, num_servers);
+       zsocket_destroy(ctx, sock_to_servers);
+       zctx_destroy(&ctx);
+       destroy_server_names(servers, num_servers);
 
     */
+    //destroy_server_sockets();
     printf("done\n");
     return true;
 }
@@ -272,7 +221,7 @@ int main (void) {
         //SODAW_write(obj_name, writer_id, i,  payload, size, servers, port);
     }
 
-//   zclock_sleep(50*1000);
+    //   zclock_sleep(50*1000);
     return 0;
 }
 
