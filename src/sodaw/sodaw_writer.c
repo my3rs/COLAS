@@ -19,7 +19,7 @@
 
 extern int s_interrupted;
 
-#ifdef ASLIBRARY
+
 
 
 Tag *SODAW_write_get_phase(char *obj_name,
@@ -187,42 +187,4 @@ if(DEBUG_MODE){
     printf("done\n");
     return true;
 }
-#endif
 
-
-//  The main thread simply starts several clients and a server, and then
-//  waits for the server to finish.
-//#define ASMAIN
-
-#ifdef ASMAIN
-
-int main (void) {
-    int i ;
-
-    char *payload = (char *)malloc(100000000*sizeof(char));
-    unsigned int size = 100000000*sizeof(char);
-
-
-    char *servers[]= {
-        "172.17.0.2"
-    };
-
-    unsigned int num_servers = 1;
-    char port[]= {PORT};
-
-    char writer_id[] = { "writer_1"};
-    char obj_name[] = {OBJECT};
-
-    unsigned int op_num;
-    s_catch_signals();
-
-    for( i=0; i < 5; i++) {
-        printf("\nWRITE %d\n", i);
-        //SODAW_write(obj_name, writer_id, i,  payload, size, servers, port);
-    }
-
-    //   zclock_sleep(50*1000);
-    return 0;
-}
-
-#endif

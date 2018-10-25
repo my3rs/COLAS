@@ -59,7 +59,7 @@ void reader_process(Parameters parameters) {
     unsigned int opnum=2;
 
     write_initial_data(parameters);
-    EncodeData *encoding_info = create_EncodeData(parameters);
+    
     ClientArgs *client_args = create_ClientArgs(parameters);
 
     char obj_name[100]="atomic_object";
@@ -82,7 +82,9 @@ void reader_process(Parameters parameters) {
 
 
         if(parameters.algorithm==sodaw) {
-          char *payload_read = SODAW_read("atomic_object", opnum,  encoding_info, client_args);
+			EncodeData *encoding_info = create_EncodeData(parameters);
+			SODAW_read("atomic_object", opnum,  encoding_info, client_args);
+			destroy_DecodeData(encoding_info);
         }
 
 /*

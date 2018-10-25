@@ -34,6 +34,28 @@ EncodeData *create_EncodeData(Parameters parameters) {
     return encoding_info;
 }
 
+
+
+void destroy_EncodeData(EncodeData *encoding_info) {
+   for(int i=0; i < encoding_info->N; i++) {
+        free(encoding_info->encoded_data[i]);
+    }
+   free(encoding_info->encoded_data);
+
+   free(encoding_info);
+}
+
+
+void destroy_DecodeData(EncodeData *encoding_info) {
+/*   for(int i=0; i < encoding_info->N; i++) {
+        free(encoding_info->encoded_data[i]);
+    }
+   free(encoding_info->encoded_data);
+*/
+   free(encoding_info->decoded_data);
+   free(encoding_info);
+}
+
 void printParameters(Parameters parameters) {
     int i;
 
@@ -91,20 +113,25 @@ RawData *create_RawData() {
     return raw_data;
 }
 
+void destroy_RawData(RawData *raw_data) {
+    free(raw_data);
+}
+
 ClientArgs *create_ClientArgs(Parameters parameters) {
-
-    char *servers_str = get_servers_str(parameters);
-
     ClientArgs *client_args  = (ClientArgs *)malloc(sizeof(ClientArgs));
 
     strcpy(client_args->client_id, parameters.server_id);
     strcpy(client_args->port, parameters.port);
-
-    client_args->servers_str = (char *)malloc( (strlen(servers_str) +1)*sizeof(char));
-    strcpy(client_args->servers_str, servers_str);
-
+    client_args->servers_str = get_servers_str(parameters);
     return client_args;
 }
+
+
+void destroy_ClientArgs(ClientArgs *client_args) {
+	free(client_args->servers_str);
+	free(client_args);
+}
+
 
 void setDefaults(Parameters *parameters) {
     parameters->num_servers = 0;
@@ -117,28 +144,17 @@ void setDefaults(Parameters *parameters) {
     strcpy(parameters->port, PORT);
 }
 
-void destroy_server_args(Server_Args *server_args) {
-    free(server_args->init_data);
-    free(server_args);
-}
 
 Server_Args * get_server_args( Parameters parameters) {
-
     Server_Args *server_args = (Server_Args *) malloc(sizeof(Server_Args));
-    strcpy(server_args->server_id, parameters.server_id);
 
+    strcpy(server_args->server_id, parameters.server_id);
     server_args->servers_str =  get_servers_str(parameters);
-    printf("servers args %s\n", server_args->servers_str);
-
-    strcpy(server_args->server_id, parameters.server_id);
-
     strcpy(server_args->port, PORT);
     strcpy(server_args->port1, PORT1);
 
     unsigned int filesize = (unsigned int) (parameters.filesize_kb*1024);
-
     server_args->init_data= get_random_data(filesize);
-
     server_args->init_data_size= filesize;
 
     server_args->sock_to_servers = NULL;
@@ -148,9 +164,20 @@ Server_Args * get_server_args( Parameters parameters) {
     server_args->K = ceil((float)parameters.num_servers + 1)/2;
     server_args->status = NULL;
 
-
     return server_args;
 }
+
+
+void destroy_server_args(Server_Args *server_args) {
+    free(server_args->init_data);
+    free(server_args->servers_str);
+    if(server_args->status)
+		destroy_server_status(server_args->status);
+//    if(server_args->sock_to_servers)
+//		destroy_sock_to_server(server_args->sock_to_servers);
+    free(server_args);
+}
+
 
 Server_Status * get_server_status( Parameters parameters) {
     Server_Status *server_status = (Server_Status *) malloc(sizeof(Server_Status));
@@ -162,7 +189,9 @@ Server_Status * get_server_status( Parameters parameters) {
     server_status->process_memory = 0;
     return server_status;
 }
-
+void destroy_server_status(Server_Status * server_status){
+	free(server_status);
+}
 
 char * get_random_data(unsigned int size) {
     srand(23);

@@ -13,9 +13,9 @@
 #include "../baseprocess/client.h"
 #include "abd_client.h"
 
-
 void destroy_ABD_Data(RawData *abd_data);
-RawData* ABD_read(
+
+RawData * ABD_read(
                 char *obj_name,
                 unsigned int op_num,
                 ClientArgs *client_args

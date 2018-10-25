@@ -92,7 +92,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				if data.algorithm == "ABD" {
 					abd_data.data = unsafe.Pointer(payload)
-					abd_data.data_size = C.ulong(payload_size)
+					abd_data.data_size = C.uint(payload_size)
 					
 					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
 				}

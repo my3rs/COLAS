@@ -13,6 +13,9 @@
 #include <string.h>
 #include "algo_utils.h"
 
+
+#define LOGSIZE 1024
+
 typedef struct _client_Args {
     char client_id[BUFSIZE];
     char *servers_str;
@@ -20,15 +23,21 @@ typedef struct _client_Args {
     char port1[10];
 } ClientArgs;
 
-
+typedef struct _s_log_entry {
+	float inter_for_throughput;
+	float latency;
+	unsigned int data_size;
+	unsigned int op_num;
+} s_log_entry;
 
 void s_signal_handler(int signal_value);
 
 void s_catch_signals();
 
 void *get_socket_servers(ClientArgs *client_args) ;
-void *get_md_socket_dealer(ClientArgs *client_args) ;
+//void *get_md_socket_dealer(ClientArgs *client_args) ;
 
+void destroy_server_sockets();
 
 zhash_t *receive_message_frames_at_client(zmsg_t *msg, zlist_t *names) ;
 void send_multicast_servers(void *sock_to_servers, int num_servers, char *names[],  int n, ...) ;

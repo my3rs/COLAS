@@ -27,7 +27,6 @@ import "C"
 
 func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	active_chan = make(chan bool, 2)
-	//var object_name string = "atomic_object"
 	data.active = false
 
 	var client_args *C.ClientArgs
@@ -55,7 +54,6 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			copyGoParamToCParam(cparameters, parameters)
 
 			client_args = C.create_ClientArgs(*cparameters)
-			encoding_info = C.create_EncodeData(*cparameters)
 
 			ReinitializeParameters()
 			LogParameters()
@@ -68,33 +66,38 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			if data.active == true && len(data.servers) > 0 {
 				opnum++
 
+				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
+				time.Sleep(time.Duration(rand_wait))
+
 				if opnum > 2000 {
 					os.Exit(0)
 				}
 
-				//rand_wait := rand_wait_time()*int64(time.Millisecond) + int64(time.Millisecond)
-				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
-				time.Sleep(time.Duration(rand_wait))
+				if len(data.inter_read_wait_distribution) == 2 {
+					read_distribution := data.inter_read_wait_distribution[0]
+					read_distance, _ := strconv.Atoi(data.inter_read_wait_distribution[1])
+					fmt.Println("[PARAMETERS DEBUG] Preparing to sleep...")
+
+					if read_distribution == "const" {
+						time.Sleep(time.Duration(read_distance) * 1000 * time.Microsecond)
+						fmt.Println("[PARAMETERS DEBUG] Sleep...")
+					}
+				}
 
 				fmt.Printf("%s %d %d %s %s\n", parameters.Server_id, opnum, rand_wait, C.GoString(client_args.servers_str), parameters.port)
 
 				// call the ABD algorithm
-
 				start := time.Now()
 				if data.algorithm == "ABD" {
-
 					abd_data = C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
 					C.destroy_ABD_Data(abd_data)
-					
 				}
 
 				// call the SODAW algorithm
 				if data.algorithm == "SODAW" {
-					var payload_read *C.char
-					payload_read = C.SODAW_read(C.CString("atomic_object"), C.uint(opnum), encoding_info, client_args)
-					_ = payload_read
-
-					
+					encoding_info = C.create_EncodeData(*cparameters)
+					C.SODAW_read(C.CString("atomic_object"), C.uint(opnum), encoding_info, client_args)
+					C.destroy_DecodeData(encoding_info)
 				}
 
 				elapsed := time.Since(start)
@@ -102,15 +105,7 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				data.write_counter += 1
 
-				if len(data.inter_read_wait_distribution) == 2 {
-					read_distribution := data.inter_read_wait_distribution[0]
-					read_distance, _ := strconv.Atoi(data.inter_read_wait_distribution[1])
-
-					if read_distribution == "const" {
-						time.Sleep(time.Duration(read_distance) * 1000 * time.Microsecond)
-					}
-					
-				}
+				
 			} else {
 				time.Sleep(5 * time.Microsecond)
 			}
@@ -163,7 +158,7 @@ func write_initial_data(cparameters *C.Parameters, parameters *Parameters) {
 
 	if data.algorithm == "ABD" {
 		abd_data.data = unsafe.Pointer(payload)
-		abd_data.data_size = C.ulong(payload_size)
+		abd_data.data_size = C.uint(payload_size)
 		C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
 	} else if data.algorithm == "SODAW" {
 		C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)

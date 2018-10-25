@@ -9,6 +9,7 @@ src/ZMQ/czmqlibs/*
 src/ZMQ/zmqlibs/*
 
 .idea/
+.vs/
 cmake-debug-build/
 cmake-build-debug/
 

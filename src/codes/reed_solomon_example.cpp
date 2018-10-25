@@ -215,7 +215,7 @@ uint8_t *decode(uint32_t N, uint32_t max_symbols, uint32_t max_symbol_size,
        = convert_from_C_to_vector(encoded_data_info);
      
 
-    std::cout << "decode=======================" << std::endl;
+    //std::cout << "decode=======================" << std::endl;
     std::vector< uint8_t *> decoded_symbols;
 
     int num_blocks  = encoded_data_info.num_blocks;

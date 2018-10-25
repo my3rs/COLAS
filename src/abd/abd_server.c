@@ -9,7 +9,8 @@
 extern int s_interrupted;
 
 extern Server_Status *status;
-extern Server_Status *server_args;
+extern Server_Args *server_args;
+
 
 static zhash_t *hash_object_ABD;
 
@@ -39,10 +40,20 @@ void algorithm_ABD_WRITE_VALUE( zhash_t *frames, void *worker) {
     Tag local_tag;
     get_object_tag(hash_object_ABD, object_name, &local_tag);
 
+//    if( DEBUG_MODE )printf("\t\t WRITE TAG for COMP (%d, %s)  (%d, %s)\n", local_tag.z, local_tag.id, tag.z, tag.id);
 
-    if( compare_tags(local_tag, tag) == -1 ) {
+    if( compare_tags(local_tag, tag)==-1 ) {
 
         zframe_t *payload_frame= (zframe_t *)zhash_lookup(frames, PAYLOAD);
+
+        if( 0 &&  DEBUG_MODE)  {
+           int size = zframe_size(payload_frame);
+           void *frame_data = zframe_data(payload_frame);
+           char *data =  (char *)malloc(size + 1);
+           memcpy(data, frame_data, size);
+           data[size]='\0';
+           printf("data %s\n", data);
+        }
 
         assert(hash_object_ABD!=NULL);
 
@@ -83,15 +94,17 @@ void algorithm_ABD_WRITE_VALUE( zhash_t *frames, void *worker) {
     } else {
         zframe_t *ack_frame = zframe_new("SUCCESS",strlen("SUCCESS"));
         zhash_insert(frames, "acknowledge", ack_frame);
-#ifdef DEBUG_MODE
-    printf("\t\tSENT BEHIND\n");
-#endif
+        if( DEBUG_MODE ) printf("\t\tSENT BEHIND\n");
     }
 
     get_string_frame(tag_str, frames, PHASE);
     printf("\tsending ...\n");
 
-    send_frames_at_server(frames, worker, SEND_FINAL, 6,  SENDER, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG);
+    char *serverid = server_args->server_id;
+    zframe_t *serverid_frame = zframe_new(serverid, strlen(serverid));
+    zhash_insert(frames, SERVERID, serverid_frame);
+
+    send_frames_at_server(frames, worker, SEND_FINAL, 7,  SENDER, SERVERID, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG);
 
     return;
 }
@@ -113,8 +126,12 @@ void algorithm_ABD_GET_TAG(zhash_t *frames, void *worker) {
     assert(opnum>=0);
 
     printf("\t\tsending...\n,");
-    send_frames_at_server(frames, worker, SEND_FINAL, 6,  SENDER, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG);
 
+    char *serverid = server_args->server_id;
+    zframe_t *serverid_frame = zframe_new(serverid, strlen(serverid));
+    zhash_insert(frames, SERVERID, serverid_frame);
+
+    send_frames_at_server(frames, worker, SEND_FINAL, 7,  SENDER, SERVERID, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG);
 }
 
 void algorithm_ABD_GET_TAG_VALUE(zhash_t  *frames,  void *worker) {
@@ -131,7 +148,7 @@ void algorithm_ABD_GET_TAG_VALUE(zhash_t  *frames,  void *worker) {
     assert(temp_hash_hash!=NULL);
 
     zlist_t *keys = zhash_keys (temp_hash_hash);
-    assert((int)zlist_size(keys) == 1);
+    assert((int)zlist_size(keys)==1);
 
     void *key = zlist_first(keys);
     assert(key!=NULL);
@@ -142,8 +159,12 @@ void algorithm_ABD_GET_TAG_VALUE(zhash_t  *frames,  void *worker) {
     zframe_t *data_frame = zhash_lookup(temp_hash_hash, key);
     zhash_insert(frames, PAYLOAD, (void *)data_frame);
 
+    char *serverid = server_args->server_id;
+    zframe_t *serverid_frame = zframe_new(serverid, strlen(serverid));
+    zhash_insert(frames, SERVERID, serverid_frame);
+
     printf("\tsending ...\n");
-    send_frames_at_server(frames, worker, SEND_FINAL, 7,  SENDER, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG, PAYLOAD );
+    send_frames_at_server(frames, worker, SEND_FINAL, 8,  SENDER, SERVERID, OBJECT,  ALGORITHM, PHASE, OPNUM, TAG, PAYLOAD );
 
     zhash_delete(frames, PAYLOAD);
     zlist_purge(keys);
@@ -181,5 +202,11 @@ void algorithm_ABD(zhash_t *frames, void *worker, void *_server_args) {
         algorithm_ABD_GET_TAG_VALUE(frames, worker);
     }
 
+    /* zframe_t *payloadf= zmsg_pop (msg);
+            printf("%d\n",  (int)zframe_size(payloadf));
 
+    if(  get_uint_frame(frames, OPNUM) >400) exit(0);
+    */
 }
+
+

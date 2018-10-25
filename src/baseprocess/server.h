@@ -15,8 +15,7 @@
 #include "../sodaw/sodaw_server.h"
 #include "../abd/abd_server.h"
 
-#define DEBUG_MODE  1
-#undef DEBUG_MODE
+#define DEBUG_MODE  0
 
 typedef struct _Server_Status {
     float network_data;

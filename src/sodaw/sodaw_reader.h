@@ -18,6 +18,6 @@
 
 int get_encoded_info(zhash_t *received_data, char *decodeableKey, EncodeData *encoding_info) ;
 
-char *SODAW_read(char *obj_name, unsigned int op_num, EncodeData *encoding_info, ClientArgs *client_args);
+void SODAW_read(char *obj_name, unsigned int op_num, EncodeData *encoding_info, ClientArgs *client_args);
 
 #endif

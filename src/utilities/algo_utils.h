@@ -66,110 +66,110 @@
 int s_interrupted;
 
 typedef struct  _TAG {
-	int z;
-	char id[100];
+    int z;
+    char id[100];
 }  Tag;
 
 typedef struct _RawData {
-	void *data;
-	int data_size;
-	Tag *tag;
+   void *data;
+   unsigned int data_size;
+   Tag *tag;
 } RawData;
 
 
 typedef struct  _TAG_VALUE {
-	Tag tag;
-	void *data;
-	int size;
+    Tag tag;
+    void *data;
+    int size;
 }  Tag_Valuu;
 
 
 
 enum INSERT_DATA_POLICY {
-	force, yield
+    force, yield
 };
 
 
 void s_signal_handler(int signal_value);
 
-void s_catch_signals();
+void s_catch_signals ();
 
-enum ProcessType { server = 2, reader = 0, writer = 1 };
+enum ProcessType { server=2, reader=0, writer=1  };
 
-enum Algorithm { abd = 0, sodaw = 1, soda = 2 };
+enum Algorithm {abd=0, sodaw=1, soda=2};
 
 
 bool is_equal(char *payload1, char*payload2, unsigned int size);
 
-void _zframe_int(zframe_t *f, int *i);
+void _zframe_int(zframe_t *f, int *i) ;
 
-void _zframe_uint(zframe_t *f, unsigned int *i);
+void _zframe_uint(zframe_t *f, unsigned int *i) ;
 
 int  get_tag_frame(zhash_t *frames, Tag *tag);
 
-void _zframe_str(zframe_t *f, char *buf);
+void _zframe_str(zframe_t *f, char *buf) ;
 
-void _zframe_value(zframe_t *f, char *buf);
+void _zframe_value(zframe_t *f, char *buf) ;
 
-char *create_destinations(char **servers, unsigned int num_servers, char *port, char type);
+char *create_destinations(char **servers, unsigned int num_servers, char *port, char type) ;
 
-char *create_destination(char *server, char *port);
+char *create_destination(char *server, char *port) ;
 
 
-void init_tag(Tag *tag);
+void init_tag(Tag *tag) ;
 
 
 /*
    returns -1 if a < b
-			0 if a = b
-		   +1 if a > b
+            0 if a = b
+           +1 if a > b
 */
 
 
-int has_object(zhash_t *object_hash, char *obj_name);
+int has_object(zhash_t *object_hash,  char *obj_name) ;
 
-int print_object_hash(zhash_t *object_hash);
+int print_object_hash(zhash_t *object_hash) ;
 
-int compare_tag_ptrs(Tag *a, Tag *b);
+int compare_tag_ptrs(Tag *a, Tag *b) ;
 
-int compare_tags(Tag a, Tag b);
+int compare_tags(Tag a, Tag b) ;
 
 // converts a string to a tag
-void string_to_tag(char *str, Tag *tag);
+void string_to_tag(char *str, Tag *tag) ;
 
 // converts a tag to a string
-void tag_to_string(Tag tag, char *buf);
+void tag_to_string(Tag tag, char *buf) ;
 
 // converts a tag to a string
 void tag_ptr_to_string(Tag *tag, char *buf);
 
 
-Tag *get_max_tag(zlist_t *tag_list);
+Tag *get_max_tag(zlist_t *tag_list) ;
 
-void free_items_in_list(zlist_t *list);
+void free_items_in_list( zlist_t *list) ;
 
-int  get_object_tag(zhash_t *hash, char * object_name, Tag *tag);
+int  get_object_tag(zhash_t *hash, char * object_name, Tag *tag) ;
 
-char * get_object_value(zhash_t *hash, char * object_name, Tag tag);
+char * get_object_value(zhash_t *hash, char * object_name, Tag tag) ;
 
-zframe_t * get_object_frame(zhash_t *hash, char * object_name, Tag tag);
+zframe_t * get_object_frame(zhash_t *hash, char * object_name, Tag tag) ;
 
-char **create_server_names(char *servers_str);
+char **create_server_names(char *servers_str) ;
 
-void  destroy_server_names(char **servers, int num_servers);
-unsigned int count_num_servers(char *servers_str);
+void  destroy_server_names(char **servers, int num_servers) ;
+unsigned int count_num_servers(char *servers_str) ;
 
 unsigned int get_uint_frame(zhash_t *frames, const char *str);
 
-int  get_string_frame(char *buf, zhash_t *frames, const char *str);
+int  get_string_frame(char *buf, zhash_t *frames,  const char *str);
 
 int  get_int_frame(zhash_t *frames, const char *str);
 
 void destroy_frames(zhash_t *frames);
 
-void clear_hash(zhash_t *hash);
+void clear_hash(zhash_t *hash) ;
 
-enum SEND_TYPE { SEND_MORE, SEND_FINAL };
+enum SEND_TYPE {SEND_MORE, SEND_FINAL};
 
 
 void print_out_hash(zhash_t* frames);
@@ -177,15 +177,15 @@ void print_out_hash(zhash_t* frames);
 void print_out_hash_in_order(zhash_t* frames, zlist_t *names);
 
 
-uint32_t simple_hash(const void *buf, size_t buflength);
+uint32_t simple_hash(const void *buf, size_t buflength) ;
 
 void insertIntoHash(const char* TYPE,
-	zmsg_t *msg,
-	zhash_t *frames);
+                    zmsg_t *msg,
+                    zhash_t *frames);
 
 void insertIntoHashAndList(const char* TYPE,
-	zmsg_t *msg,
-	zhash_t *frames,
-	zlist_t *names);
+                           zmsg_t *msg,
+                           zhash_t *frames,
+                           zlist_t *names);
 #endif
 

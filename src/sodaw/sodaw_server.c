@@ -17,7 +17,9 @@ extern int s_interrupted;
 extern Server_Status *status;
 extern Server_Args *server_args;
 
-#ifdef ASLIBRARY
+#define DEBUG_MODE 1
+
+
 static zhash_t *hash_object_SODAW;
 static zhash_t *history_table = NULL;
 static zhash_t *readed_table = NULL;
@@ -615,17 +617,5 @@ void algorithm_SODAW(zhash_t *frames, void *worker, void *_server_args) {
     }
 }
 
-#endif
 
-//  The main thread simply starts several clients and a server, and then
-//  waits for the server to finish.
-#ifdef ASMAIN
-int main (void) {
-    int i ;
-    zthread_new(server_task, NULL);
-    zclock_sleep(60*60*1000);
-    return 0;
-
-}
-#endif
 

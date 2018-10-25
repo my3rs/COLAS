@@ -21,6 +21,7 @@
 #include <kodocpp/kodocpp.hpp>
 
 #include "rlnc_rs.h"
+#define DEBUG_MODE 1
 typedef std::vector< std::vector< std::vector<uint8_t> > >   VECTOR_VECTOR_VECTOR_UINT8;
 typedef std::vector< std::vector<uint8_t> >                  VECTOR_VECTOR_UINT8;
 typedef std::vector<uint8_t>                              VECTOR_UINT8;
@@ -33,14 +34,14 @@ void printVectorBytes(std::vector<uint8_t> vector){
         printf("%.2x ", unsigned(*i));
     }
     std::cout << std::endl;
-} 
+}
 
 void printVectorChars(std::vector<uint8_t> vector){
     for (std::vector<uint8_t>::const_iterator i = vector.begin(); i != vector.end(); ++i){
         printf("%c", *i);
     }
     std::cout << std::endl;
-} 
+}
 
 void printVectorCharsN(std::vector<uint8_t> vector, int N){
     int j=0;
@@ -49,21 +50,20 @@ void printVectorCharsN(std::vector<uint8_t> vector, int N){
         printf("%c", *i);
     }
     std::cout << std::endl;
-} 
-
+}
 
 #ifdef ASLIBRARY
 
 /*
-ENCODED_DATA encode(uint32_t N, uint32_t max_symbols, 
-         uint32_t max_symbol_size, char *data_in_char, 
+ENCODED_DATA encode(uint32_t N, uint32_t max_symbols,
+         uint32_t max_symbol_size, char *data_in_char,
           int data_size, enum CodingAlgorithm algo ) {
 */
 
 unsigned short encode(EncodeData *encode_data) {
 
     kodocpp::encoder_factory *encoder_factory;
- 
+
     if( encode_data->algorithm==full_vector ) {
         printf("full vector\n");
         encoder_factory = new  kodocpp::encoder_factory(
@@ -74,7 +74,7 @@ unsigned short encode(EncodeData *encode_data) {
     }
 
     if( encode_data->algorithm==reed_solomon ) {
-        printf("reed full vector\n");
+        printf("reed solomon\n");
         encoder_factory = new kodocpp::encoder_factory(
         kodocpp::codec::reed_solomon,
         kodocpp::field::binary8,
@@ -93,23 +93,23 @@ unsigned short encode(EncodeData *encode_data) {
     uint32_t total_num_blocks = ceil(static_cast<float>(encode_data->raw_data_size)/static_cast<float>(block_size));
     std::vector< std::vector< std::vector<uint8_t> > > *encoded_data_vector = new std::vector< std::vector< std::vector<uint8_t> > >[encode_data->N];
     std::vector< std::vector<uint8_t> > *striped_data = new std::vector< std::vector<uint8_t> >[encode_data->N];
-    
+
 
     int block_num = 0;
     uint32_t data_encoded=0;
     int encoded_symbol_size;
-    uint8_t *data = encode_data->raw_data; 
+    uint8_t *data = encode_data->raw_data;
     int raw_data_size = encode_data->raw_data_size;
 
     while( data_encoded < encode_data->raw_data_size ) {
           // prepare a block into input buffer
           uint32_t data_encoded_in_block=0;
-          std::generate(data_in.begin(), data_in.end(), 
-                [&data, &data_encoded, raw_data_size, &data_encoded_in_block] () ->uint8_t{ 
+          std::generate(data_in.begin(), data_in.end(),
+                [&data, &data_encoded, raw_data_size, &data_encoded_in_block] () ->uint8_t{
                       if(data_encoded < raw_data_size) {
                           data_encoded++;
                           data_encoded_in_block++;
-                          return *data++; 
+                          return *data++;
                        }
                        data_encoded++;
                        return 32;
@@ -123,9 +123,9 @@ unsigned short encode(EncodeData *encode_data) {
           // genereate N encoded symbols
          for(int i = 0; i < encode_data->N; i ++ ) {
              uint32_t bytes_used = encoder.write_payload(payload.data());
-            
+
               // write out the encoded symbol
-             std::vector<uint8_t> encoded_symbol; 
+             std::vector<uint8_t> encoded_symbol;
              for (std::vector<uint8_t>::const_iterator it = payload.begin(); it != payload.end(); ++it){
                 encoded_symbol.push_back(*it);
              }
@@ -163,7 +163,7 @@ unsigned short encode(EncodeData *encode_data) {
     for(int b =0; b < block_num; b++) {
         for(int s =0; s <encode_data->N; s++) {
             q =  p[s];
-            for(std::vector<uint8_t>::const_iterator it = (*encoded_data_vector)[s][b].begin(); 
+            for(std::vector<uint8_t>::const_iterator it = (*encoded_data_vector)[s][b].begin();
                     it != (*encoded_data_vector)[s][b].end(); ++it){
                 *q++ = *it;
                  count++;
@@ -180,7 +180,7 @@ unsigned short encode(EncodeData *encode_data) {
 
    free(p);
 
-#ifdef DEBUG_MODE
+if(DEBUG_MODE){
    if(encode_data->algorithm==full_vector)
    std::cout << "\t\t===========  RLNC ===========================\n";
    else
@@ -195,9 +195,9 @@ unsigned short encode(EncodeData *encode_data) {
    std::cout << "\t\tsymbol size                          " << encode_data->symbol_size << std::endl;
    std::cout << "\t\tcoded symbol size                    " << encode_data->encoded_symbol_size << std::endl;
    std::cout << std::endl;
-   std::cout << "\t\tTotal bytes in of uncoded symbols    " << 
+   std::cout << "\t\tTotal bytes in of uncoded symbols    " <<
          encode_data->K*encode_data->symbol_size*encode_data->num_blocks << std::endl;
-   std::cout << "\t\tTotal bytes in of coded symbols      " << 
+   std::cout << "\t\tTotal bytes in of coded symbols      " <<
          encode_data->N*encode_data->encoded_symbol_size*encode_data->num_blocks << std::endl;
 
    std::cout << std::endl;
@@ -207,19 +207,19 @@ unsigned short encode(EncodeData *encode_data) {
    std::cout << "\t\tRaw data size                        " << encode_data->raw_data_size << std::endl;
    std::cout << "\t\tTotal data size                      " << encode_data->total_data_size << std::endl;
    std::cout << "\t\tPadded data size                     " << encode_data->padded_data_size << std::endl;
+
+   std::cout<<"$$$$$$$before leave encoding"<<std::endl;
    if(encode_data->algorithm==full_vector)
-   std::cout << "\t\t===========  RLNC ===========================\n";
+        std::cout << "\t\t===========  RLNC ===========================\n";
    else
-   std::cout << "\t\t========== REED-SOLOMON ======================\n";
-#endif
-  
+        std::cout << "\t\t========== REED-SOLOMON ======================\n";
+}
+
    delete [] striped_data;
    delete [] encoded_data_vector;
 
    delete encoder_factory;
-
    return 1;
-
 }
 
 
@@ -236,11 +236,11 @@ std::vector< std::vector < std::vector<uint8_t> > > *convert_from_C_to_vector(En
 
      std::vector< std::vector< std::vector<uint8_t> > > *encoded_data = new std::vector< std::vector< std::vector<uint8_t> > >[N];
      std::vector< std::vector<uint8_t> > *striped_data = new std::vector< std::vector<uint8_t> >[N];
-    
+
     int c=0;
     for(int b =0; b < num_blocks; b++) {
         for(int s =encode_data->offset_index; s < K + encode_data->offset_index; s++) {
-            std::vector<uint8_t> encoded_symbol; 
+            std::vector<uint8_t> encoded_symbol;
             c=b*encoded_symbol_size;
             for(int e =0; e < encoded_symbol_size; e++) {
                 encoded_symbol.push_back(encoded_data_array[s][c++]);
@@ -260,7 +260,7 @@ std::vector< std::vector < std::vector<uint8_t> > > *convert_from_C_to_vector(En
 
 
 /*
-uint8_t *decode(uint32_t N, uint32_t max_symbols,uint32_t M,  uint32_t max_symbol_size, 
+uint8_t *decode(uint32_t N, uint32_t max_symbols,uint32_t M,  uint32_t max_symbol_size,
          ENCODED_DATA encoded_data_info, enum CodingAlgorithm algo) {
 */
 
@@ -285,9 +285,9 @@ unsigned short decode(EncodeData  *encode_data) {
     }
 
    //std::vector< std::vector < std::vector<uint8_t> > > *encoded_data  = encoded_data_info.vdata;
-   std::vector< std::vector < std::vector<uint8_t> > > *encoded_data  
+   std::vector< std::vector < std::vector<uint8_t> > > *encoded_data
        = convert_from_C_to_vector(encode_data);
-     
+
     std::vector< uint8_t *> decoded_blocks;
 
     int num_blocks  = encode_data->num_blocks;
@@ -303,7 +303,7 @@ unsigned short decode(EncodeData  *encode_data) {
        std::vector<uint8_t> data_out(decoder.block_size());
        decoder.set_mutable_symbols(data_out.data(), decoder.block_size());
 
-        
+
        uint8_t *decoded_block =  new uint8_t[encode_data->symbol_size*encode_data->K];
        unsigned short success = FALSE;
        for(int c=0; c < encode_data->K ; c++) {
@@ -322,10 +322,10 @@ unsigned short decode(EncodeData  *encode_data) {
        if(success==FALSE) return FALSE;
     }
 
-    delete [] encoded_data; 
+    delete [] encoded_data;
     delete decoder_factory;
 
-    encode_data->decoded_data = (uint8_t *)malloc( sizeof(uint8_t)*(decoded_data_size) ); 
+    encode_data->decoded_data = (uint8_t *)malloc( sizeof(uint8_t)*(decoded_data_size) );
 
     uint8_t *p = encode_data->decoded_data;
 
@@ -336,18 +336,16 @@ unsigned short decode(EncodeData  *encode_data) {
         delete decoded_blocks[i];
    }
    decoded_blocks.clear();
-   
+
    printf("done decoding with reed-solomon\n");
    return TRUE;
 }
-
-
 
 unsigned short checking_decoding(EncodeData *encoded_data){
   unsigned short failed= 1;
   for(int index =0; index < 2; index++)  {
     encoded_data->offset_index = index;
-    failed = decode(encoded_data); 
+    failed = decode(encoded_data);
     if(failed==0) return 0;
     free(encoded_data->decoded_data);
   }
