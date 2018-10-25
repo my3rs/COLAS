@@ -6,9 +6,8 @@
 
 #include "sodaw_client.h"
 
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 extern int s_interrupted;
-#ifdef ASLIBRARY
 
 // this fethers the max tag
 Tag *SODAW_write_get_or_read_get_phase (char *obj_name,
@@ -159,43 +158,3 @@ zhash_t *receive_message_frames_from_server_SODAW(zmsg_t *msg)  {
     }
     return frames;
 }
-
-#endif
-
-
-//  The main thread simply starts several clients and a server, and then
-//  waits for the server to finish.
-//#define ASMAIN
-
-#ifdef ASMAIN
-
-int main (void) {
-    int i ;
-
-    char *payload = (char *)malloc(100000000*sizeof(char));
-    unsigned int size = 100000000*sizeof(char);
-
-    char *servers[]= {
-        "172.17.0.2"
-    };
-
-
-    unsigned int num_servers = 1;
-    char port[]= {PORT};
-
-    char writer_id[] = { "writer_1"};
-    char obj_name[] = {OBJECT};
-
-    unsigned int op_num;
-    s_catch_signals();
-
-    for( i=0; i < 5; i++) {
-        printf("\nWRITE %d\n", i);
-        //SODAW_write(obj_name, writer_id, i,  payload, size, servers, port);
-    }
-
-    //   zclock_sleep(50*1000);
-    return 0;
-}
-
-#endif

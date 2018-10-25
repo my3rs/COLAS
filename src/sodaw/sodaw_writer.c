@@ -15,7 +15,7 @@
 #include <base64.h>
 #include <rlnc_rs.h>
 
-#define DEBUG_MODE 0
+#define DEBUG_MODE 1
 
 extern int s_interrupted;
 
