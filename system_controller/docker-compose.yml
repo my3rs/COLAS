@@ -4,9 +4,9 @@ reader:
     volumes:
     - /usr/local/lib:/usr/local/lib
     - /home/cyril/Workspace/COLAS:/home/cyril/Workspace/COLAS
-   environment:
+    environment:
     - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp
-	- ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+    - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
     - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf
 
 writer:
@@ -17,7 +17,7 @@ writer:
       - /home/cyril/Workspace/COLAS:/home/cyril/Workspace/COLAS
     environment:
       - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
-	  - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+      - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
       - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf
 
 server:
@@ -28,7 +28,7 @@ server:
       - /home/cyril/Workspace/COLAS:/home/cyril/Workspace/COLAS
     environment:
       - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
-	  - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+      - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
       - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf
 
 controller:
@@ -39,5 +39,5 @@ controller:
       - /home/cyril/Workspace/COLAS/:/home/cyril/Workspace/COLAS
     environment:
       - LD_LIBRARY_PATH=/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw:/usr/local/lib
-	  - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+      - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
       - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf
