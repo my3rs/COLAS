@@ -88,7 +88,7 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				if data.algorithm == "SODAW" {
 					encoding_info = C.create_EncodeData(*cparameters)
 					C.SODAW_read(C.CString("atomic_object"), C.uint(opnum), encoding_info, client_args)
-					C.destroy_DecodeData(encoding_info)
+					//C.destroy_DecodeData(encoding_info)
 				}
 
 				data.write_counter += 1
@@ -135,25 +135,27 @@ func write_initial_data(cparameters *C.Parameters, parameters *Parameters) {
 	var payload_size uint
 	var payload *C.char
 
-	// payload_size = uint(parameters.Filesize_kb * 1024)
-	payload_size = uint(data.file_size_kb * 1024)
+	payload_size = uint(data.file_size)
 
-	fmt.Println("[DEBUG GO] | data.file_size: ", data.file_size_kb)
+	fmt.Println("[DEBUG GO] | data.file_size: ", data.file_size)
 
 	payload = C.get_random_data(C.uint(payload_size))
 
 	var client_args *C.ClientArgs = C.create_ClientArgs(*cparameters)
-	var encoding_info *C.EncodeData = C.create_EncodeData(*cparameters)
-	var abd_data *C.RawData = C.create_RawData()
+
+	
 
 	if data.algorithm == "ABD" {
+		var abd_data *C.RawData = C.create_RawData()
 		abd_data.data = unsafe.Pointer(payload)
 		abd_data.data_size = C.uint(payload_size)
 		C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
+		C.free(unsafe.Pointer(payload))
+		C.destroy_RawData(abd_data)
 	} else if data.algorithm == "SODAW" {
+		var encoding_info *C.EncodeData = C.create_EncodeData(*cparameters)
 		C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)
 	}
 
-	C.free(unsafe.Pointer(payload))
-	C.free(unsafe.Pointer(abd_data))
+	C.destroy_ClientArgs(client_args)
 }

@@ -23,7 +23,7 @@ func LogParameters() {
 
 	log.Printf("INFO\tN\t%d\n", data.N)
 	log.Printf("INFO\tK\t%d\n", data.K)
-	log.Printf("INFO\tFILE_SIZE\t%f KB\n", data.file_size_kb)
+	log.Printf("INFO\tFILE_SIZE\t%f KB\n", data.file_size)
 	log.Printf("INFO\tRAND_SEED\t%d\n", data.rand_seed)
 
 	if len(data.inter_read_wait_distribution) == 2 {

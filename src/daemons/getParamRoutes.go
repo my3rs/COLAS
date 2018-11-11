@@ -10,7 +10,7 @@ func GetFileSize(w http.ResponseWriter, r *http.Request) {
 	log.Println("INFO\tGet Params")
 	fmt.Println("INFO\tGet Params")
 
-	fmt.Fprintf(w, "%g\n", data.file_size_kb)
+	fmt.Fprintf(w, "%g\n", data.file_size)
 }
 
 //get seed
@@ -27,7 +27,7 @@ func GetParams(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "Algorithm\t%s\n", data.algorithm)
 	fmt.Fprintf(w, "Random Seed\t%d\n", data.rand_seed)
-	fmt.Fprintf(w, "File Size\t%g KB\n", data.file_size_kb)
+	fmt.Fprintf(w, "File Size\t%g KB\n", data.file_size)
 	fmt.Fprintf(w, "Run Id\t%s\n", data.run_id)
 	fmt.Fprintf(w, "Port\t%s\n", data.port)
 	fmt.Fprintf(w, "WriteTo\t%s\n", data.writeto)

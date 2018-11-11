@@ -250,9 +250,9 @@ func SetFileSize(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO\tSETTING FILE SIZE (KB) \t" + ip)
 
 	if err != nil {
-		data.file_size_kb = 1024
+		data.file_size = 1024
 	}
-	data.file_size_kb = k
+	data.file_size = k
 
 	if data.processType == 3 {
 		send_command_to_processes(data.writers, "SetFileSize", ip)

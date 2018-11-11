@@ -80,7 +80,7 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 
 				}
 
-				payload_size = uint(data.file_size_kb * 1024)
+				payload_size = uint(data.file_size)
 
 				payload = C.get_random_data(C.uint(payload_size))
 
