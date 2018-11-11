@@ -168,15 +168,14 @@ if(DEBUG_MODE){
     void *sock_to_servers= get_socket_servers(client_args);
 
     printf("\tWRITE_GET (WRITER)\n");
-	timer_start();
+	clock_t t_write_get_start = clock();
     Tag *max_tag=  SODAW_write_get_phase(obj_name,
 	     client_args->client_id,
             op_num,
             sock_to_servers,
             num_servers
             );
-	timer_stop();
-	clock_t t_write_get = get_time_inter();
+	clock_t t_write_get_finish = clock();
 
     Tag new_tag;
     new_tag.z = max_tag->z + 1;
@@ -187,7 +186,7 @@ if(DEBUG_MODE){
     encoded_data->raw_data = payload;
     encoded_data->raw_data_size = payload_size;
 
-	timer_start();
+	clock_t t_write_put_start = clock();
     SODAW_write_put_phase(
             obj_name,
             client_args->client_id,
@@ -197,12 +196,11 @@ if(DEBUG_MODE){
             new_tag,
             encoded_data
             );
-	timer_stop();
-	clock_t t_write_put = get_time_inter();
+	clock_t t_write_put_finish = clock();
 
 
 	sprintf(s_log, "{\"client_id\": \"%s\", \"op_num\": %d, \"write_get_time\": %f, \"write_put_time\": %f}", 
-		client_args->client_id, op_num, t_write_get, t_write_put);
+		client_args->client_id, op_num, (t_write_get_finish-t_write_get_start)*1000*1000/CLOCKS_PER_SEC, (t_write_put_finish-t_write_put_start)*1000/CLOCKS_PER_SEC);
 	zlog_info(category_writer_sodaw, s_log);
 	zlog_fini();
 

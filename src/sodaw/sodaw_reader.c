@@ -21,7 +21,15 @@
 
 extern int s_interrupted;
 
+void destroy_DecodeData(EncodeData *encoding_info) {
+	for (int i = 0; i < encoding_info->K; i++) {
+		free(encoding_info->encoded_data[i]);
+	}
+	free(encoding_info->encoded_data);
 
+	free(encoding_info->decoded_data);
+	free(encoding_info);
+}
 
 void destroy_received_data(zhash_t *received_data) {
 	zlist_t *keys = zhash_keys(received_data);
@@ -291,19 +299,18 @@ void SODAW_read(char *obj_name,
 	}
 
 	if (DEBUG_MODE) printf("\tREAD_GET (READER)\n");
-	timer_start();
+	clock_t t_read_tag_start = clock();
 	Tag *read_tag = SODAW_read_get_phase(obj_name,
 		client_args->client_id,
 		op_num,
 		sock_to_servers,
 		num_servers);
-	timer_stop();
-	clock_t t_read_tag = get_time_inter();
+	clock_t t_read_tag_finish = clock();
 	if (DEBUG_MODE) printf("\t\tmax tag (%d,%s)\n\n", read_tag->z, read_tag->id);
 
 
 	if (DEBUG_MODE) printf("\tREAD_VALUE (READER)\n");
-	timer_start();
+	clock_t t_read_value_start = clock();
 	SODAW_read_value(obj_name,
 		client_args->client_id,
 		op_num,
@@ -311,26 +318,31 @@ void SODAW_read(char *obj_name,
 		num_servers,
 		*read_tag,
 		encoded_data);
-	timer_stop();
-	clock_t t_read_value = get_time_inter();
+	clock_t t_read_value_finish = clock();
 
 	if (DEBUG_MODE) printf("\tREAD_COMPLETE (READER)\n");
-	timer_start();
+	clock_t t_read_complete_start = clock();
 	SODAW_read_complete_phase(obj_name,
 		client_args->client_id,
 		sock_to_servers,
 		num_servers,
 		op_num,
 		*read_tag);
-	timer_stop();
-	clock_t t_read_complete = get_time_inter();
+	clock_t t_read_complete_finish = clock();
+
 
 	sprintf(s_log, "{\"client_id\": \"%s\", \"op_num\": %d, \"read_get_time\": %f, \"read_value_time\": %f, \"read_complete_time\": %f}", 
-		client_args->client_id, op_num, t_read_tag, t_read_value, t_read_complete);
+		client_args->client_id, 
+		op_num, 
+		(t_read_tag_finish-t_read_tag_finish)*1000*1000/CLOCKS_PER_SEC, 
+		(t_read_value_start-t_read_value_finish)*1000/CLOCKS_PER_SEC, 
+		(t_read_complete_finish-t_read_complete_start)*1000*1000/CLOCKS_PER_SEC);
+
 	zlog_info(category_reader_sodaw, s_log);
 	zlog_fini();
 
 	free(read_tag);
+	destroy_DecodeData(encoded_data);
 
 	//!! Why was this turned off? Socket generates a memory leak
 	  /*
