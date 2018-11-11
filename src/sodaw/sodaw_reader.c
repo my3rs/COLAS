@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <zlog.h>
 
 #include <algo_utils.h>
 #include "sodaw_client.h"
@@ -15,8 +16,8 @@
 #include <base64.h>
 #include <rlnc_rs.h>
 
-#define DEBUG_MODE 1
-#define VERBOSE_MODE 1
+#define DEBUG_MODE 0
+#define VERBOSE_MODE 0
 
 extern int s_interrupted;
 
@@ -261,29 +262,48 @@ void SODAW_read(char *obj_name,
 	s_catch_signals();
 
 	int j;
+	char s_log[LOGSIZE];
 	int num_servers = count_num_servers(client_args->servers_str);
 	void *sock_to_servers = get_socket_servers(client_args);
 
-#ifdef DEBUG_MODE
-	printf("\t\tObj name       : %s\n", obj_name);
-	printf("\t\tReader name    : %s\n", client_args->client_id);
-	printf("\t\tOperation num  : %d\n", op_num);
 
-	printf("\t\tServer string   : %s\n", client_args->servers_str);
-	printf("\t\tPort to Use     : %s\n", client_args->port);
-	printf("\t\tNum of Servers  : %d\n", num_servers);
-#endif
+	int rc = zlog_init(NULL);
+	if (rc) {
+		printf("zlog init failed\n");
+		exit(-1);
+	}
+
+	zlog_category_t *category_reader_sodaw = zlog_get_category("reader_sodaw");
+	if (!category_reader_sodaw) {
+		printf("can not get category_reader_sodaw\n");
+		zlog_fini();
+		exit(-2);
+	}
+
+	if (DEBUG_MODE) {
+		printf("\t\tObj name       : %s\n", obj_name);
+		printf("\t\tReader name    : %s\n", client_args->client_id);
+		printf("\t\tOperation num  : %d\n", op_num);
+
+		printf("\t\tServer string   : %s\n", client_args->servers_str);
+		printf("\t\tPort to Use     : %s\n", client_args->port);
+		printf("\t\tNum of Servers  : %d\n", num_servers);
+	}
 
 	if (DEBUG_MODE) printf("\tREAD_GET (READER)\n");
+	timer_start();
 	Tag *read_tag = SODAW_read_get_phase(obj_name,
 		client_args->client_id,
 		op_num,
 		sock_to_servers,
 		num_servers);
+	timer_stop();
+	clock_t t_read_tag = get_time_inter();
 	if (DEBUG_MODE) printf("\t\tmax tag (%d,%s)\n\n", read_tag->z, read_tag->id);
 
 
 	if (DEBUG_MODE) printf("\tREAD_VALUE (READER)\n");
+	timer_start();
 	SODAW_read_value(obj_name,
 		client_args->client_id,
 		op_num,
@@ -291,15 +311,24 @@ void SODAW_read(char *obj_name,
 		num_servers,
 		*read_tag,
 		encoded_data);
+	timer_stop();
+	clock_t t_read_value = get_time_inter();
 
 	if (DEBUG_MODE) printf("\tREAD_COMPLETE (READER)\n");
+	timer_start();
 	SODAW_read_complete_phase(obj_name,
 		client_args->client_id,
 		sock_to_servers,
 		num_servers,
 		op_num,
 		*read_tag);
+	timer_stop();
+	clock_t t_read_complete = get_time_inter();
 
+	sprintf(s_log, "{\"client_id\": \"%s\", \"op_num\": %d, \"read_get_time\": %f, \"read_value_time\": %f, \"read_complete_time\": %f}", 
+		client_args->client_id, op_num, t_read_tag, t_read_value, t_read_complete);
+	zlog_info(category_reader_sodaw, s_log);
+	zlog_fini();
 
 	free(read_tag);
 

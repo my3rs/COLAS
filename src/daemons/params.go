@@ -76,7 +76,7 @@ type Params struct {
 	inter_read_wait_distribution  []string
 	inter_write_wait_distribution []string
 
-	file_size float64
+	file_size_kb float64
 	rand_seed int64
 
 	active bool
@@ -108,7 +108,7 @@ func InitializeParameters(parameters *Parameters) {
 
 	//	data.write_rate = 0.6
 	//	data.read_rate = 0.6
-	data.file_size = 0.1
+	data.file_size_kb = 1024
 	data.init_file_size = 0.4
 	data.rand_seed = 1
 	data.read_counter = 0
@@ -233,7 +233,6 @@ func copyGoParamToCParam(cparameters *C.Parameters, parameters *Parameters) {
 		panic("Unknown choice for coding algorithm")
 	}
 
-	cparameters.wait = C.int(parameters.Wait)
 	cparameters.filesize_kb = C.float(parameters.Filesize_kb)
 
 	switch parameters.Processtype {

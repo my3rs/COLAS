@@ -18,6 +18,6 @@ include_directories(${PROJECT_SOURCE_DIR}/src/codes)
 link_directories(${CMAKE_BINARY_DIR}/lib)
 link_directories(${PROJECT_SOURCE_DIR}/deps/shared_kodocpp)
 
-add_executable(processc process.c)
-target_link_libraries(processc baseprocess abd sodaw utilities )
+#add_executable(processc process.c)
+#target_link_libraries(processc baseprocess abd sodaw utilities )
 #target_link_libraries(processc ${CMAKE_DL_LIBS})

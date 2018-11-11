@@ -47,11 +47,11 @@ void destroy_EncodeData(EncodeData *encoding_info) {
 
 
 void destroy_DecodeData(EncodeData *encoding_info) {
-/*   for(int i=0; i < encoding_info->N; i++) {
+   for(int i=0; i < encoding_info->K; i++) {
         free(encoding_info->encoded_data[i]);
     }
    free(encoding_info->encoded_data);
-*/
+
    free(encoding_info->decoded_data);
    free(encoding_info);
 }
@@ -102,7 +102,6 @@ void printParameters(Parameters parameters) {
     default:
         break;
     }
-    printf("\tinter op wait (ms)\t\t: %d\n", parameters.wait);
     printf("\tfile size (KB)\t\t\t: %.2f\n", parameters.filesize_kb);
 }
 

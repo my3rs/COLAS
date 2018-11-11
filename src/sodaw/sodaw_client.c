@@ -32,7 +32,7 @@ Tag *SODAW_write_get_or_read_get_phase (char *obj_name,
     zlist_t *tag_list = zlist_new();
     Tag *tag;
     while (true) {
-        printf("\t\twaiting for data..\n");
+        //printf("\t\twaiting for data.. [SODAW_write_get_or_read_get_phase]\n");
         int rc = zmq_poll(items, 1, 5*ZMQ_POLL_MSEC);
         if(rc < 0 ||  s_interrupted ) {
             printf("Interrupted!\n");
@@ -42,8 +42,10 @@ Tag *SODAW_write_get_or_read_get_phase (char *obj_name,
 	     if(done == 1)
 		 	break;
         }
-        printf("\t\treceived data\n");
+        //printf("\t\treceived data [SODAW_write_get_or_read_get_phase]\n");
         if (items [0].revents & ZMQ_POLLIN) {
+			//printf("\t\t [SODAW_write_get_or_read_get_phase]\n");
+
             zmsg_t *msg = zmsg_recv (sock_to_servers);
             assert(msg != NULL);
 

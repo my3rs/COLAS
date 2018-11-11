@@ -186,8 +186,6 @@ func SetReadRateDistribution(w http.ResponseWriter, r *http.Request) {
 		data.inter_read_wait_distribution = []string{name, k}
 	}
 
-
-
 	if data.processType == 3 {
 		send_command_to_processes(data.readers, "SetReadRateDistribution", ip)
 		send_command_to_processes(data.writers, "SetReadRateDistribution", ip)
@@ -209,7 +207,6 @@ func SetWriteRateDistribution(w http.ResponseWriter, r *http.Request) {
 	var m string
 	k := ips[1]
 
-
 	// reader or writer
 	if len(ips) > 2 {
 		m = ips[2]
@@ -218,7 +215,6 @@ func SetWriteRateDistribution(w http.ResponseWriter, r *http.Request) {
 		data.inter_write_wait_distribution = []string{name, k}
 	}
 
-	
 	// controller
 	if data.processType == 3 {
 		fmt.Println(data.inter_write_wait_distribution)
@@ -254,11 +250,12 @@ func SetFileSize(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("INFO\tSETTING FILE SIZE (KB) \t" + ip)
 
 	if err != nil {
-		data.file_size = 0.1
+		data.file_size_kb = 1024
 	}
-	data.file_size = k
+	data.file_size_kb = k
 
 	if data.processType == 3 {
 		send_command_to_processes(data.writers, "SetFileSize", ip)
+		send_command_to_processes(data.readers, "SetFileSize", ip)
 	}
 }

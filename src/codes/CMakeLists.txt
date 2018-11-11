@@ -16,17 +16,17 @@ add_library(reed SHARED reed_solomon.cpp)
 target_link_libraries(reed kodoc)
 
 
-add_executable(rlnc_example rlnc_example.cpp)
-target_link_libraries(rlnc_example kodoc)
+#add_executable(rlnc_example rlnc_example.cpp)
+#target_link_libraries(rlnc_example kodoc)
 
-add_executable(reed_solomon_example reed_solomon_example.cpp)
-target_link_libraries(reed_solomon_example kodoc)
+#add_executable(reed_solomon_example reed_solomon_example.cpp)
+#target_link_libraries(reed_solomon_example kodoc)
 
 add_library(rlnc_rs SHARED rlnc_rs.cpp)
 target_link_libraries(rlnc_rs kodoc)
 
-add_executable(rlnc_rs_check rlnc_rs_check.c)
-target_link_libraries(rlnc_rs_check rlnc_rs)
+#add_executable(rlnc_rs_check rlnc_rs_check.c)
+#target_link_libraries(rlnc_rs_check rlnc_rs)
 
 
 install(TARGETS rlnc_rs

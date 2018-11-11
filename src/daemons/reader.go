@@ -1,12 +1,12 @@
 package daemons
 
 import (
-	"os"
 	"fmt"
 	"log"
+	"os"
+	"strconv"
 	"strings"
 	"time"
-	"strconv"
 	"unsafe"
 )
 
@@ -33,7 +33,6 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 	var encoding_info *C.EncodeData
 	var abd_data *C.RawData
 	var opnum int = 0
-
 
 	for {
 		select {
@@ -66,9 +65,6 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			if data.active == true && len(data.servers) > 0 {
 				opnum++
 
-				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
-				time.Sleep(time.Duration(rand_wait))
-
 				if opnum > 2000 {
 					os.Exit(0)
 				}
@@ -76,18 +72,13 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 				if len(data.inter_read_wait_distribution) == 2 {
 					read_distribution := data.inter_read_wait_distribution[0]
 					read_distance, _ := strconv.Atoi(data.inter_read_wait_distribution[1])
-					fmt.Println("[PARAMETERS DEBUG] Preparing to sleep...")
 
 					if read_distribution == "const" {
 						time.Sleep(time.Duration(read_distance) * 1000 * time.Microsecond)
-						fmt.Println("[PARAMETERS DEBUG] Sleep...")
 					}
 				}
 
-				fmt.Printf("%s %d %d %s %s\n", parameters.Server_id, opnum, rand_wait, C.GoString(client_args.servers_str), parameters.port)
-
 				// call the ABD algorithm
-				start := time.Now()
 				if data.algorithm == "ABD" {
 					abd_data = C.ABD_read(C.CString("atomic_object"), C.uint(opnum), client_args)
 					C.destroy_ABD_Data(abd_data)
@@ -100,12 +91,8 @@ func reader_daemon(cparameters *C.Parameters, parameters *Parameters) {
 					C.destroy_DecodeData(encoding_info)
 				}
 
-				elapsed := time.Since(start)
-				log.Println(data.run_id, "READ", string(data.name), data.write_counter, rand_wait/int64(time.Millisecond), elapsed)
-
 				data.write_counter += 1
 
-				
 			} else {
 				time.Sleep(5 * time.Microsecond)
 			}
@@ -149,7 +136,10 @@ func write_initial_data(cparameters *C.Parameters, parameters *Parameters) {
 	var payload *C.char
 
 	// payload_size = uint(parameters.Filesize_kb * 1024)
-	payload_size = uint(data.file_size * 1024)
+	payload_size = uint(data.file_size_kb * 1024)
+
+	fmt.Println("[DEBUG GO] | data.file_size: ", data.file_size_kb)
+
 	payload = C.get_random_data(C.uint(payload_size))
 
 	var client_args *C.ClientArgs = C.create_ClientArgs(*cparameters)

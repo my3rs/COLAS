@@ -16,6 +16,10 @@
 
 #define LOGSIZE 1024
 
+void timer_start();
+void timer_stop();
+clock_t get_time_inter();
+
 typedef struct _client_Args {
     char client_id[BUFSIZE];
     char *servers_str;

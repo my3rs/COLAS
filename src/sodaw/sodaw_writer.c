@@ -8,14 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-
+#include <zlog.h>
 #include <algo_utils.h>
 #include "sodaw_client.h"
 #include "sodaw_client.h"
 #include <base64.h>
 #include <rlnc_rs.h>
 
-#define DEBUG_MODE 1
+#define DEBUG_MODE 0
 
 extern int s_interrupted;
 
@@ -133,10 +133,27 @@ bool SODAW_write(
         unsigned int payload_size,
         EncodeData *encoded_data,
         ClientArgs *client_args
-        ) {
+        ) 
+{
     s_catch_signals();
     int j;
+	char s_log[LOGSIZE];
     int num_servers = count_num_servers(client_args->servers_str);
+
+
+	int rc = zlog_init(NULL);       // $ZLOG_CONF_PATH
+	if (rc) {
+		printf("zlog init failed\n");
+		exit(-1);
+	}
+
+	zlog_category_t *category_writer_sodaw = zlog_get_category("writer_sodaw");
+	if (!category_writer_sodaw) {
+		printf("can not get category_writer_sodaw\n");
+		zlog_fini();
+		exit(-2);
+	}
+
 
 if(DEBUG_MODE){
     printf("\t\tObj name       : %s\n",obj_name);
@@ -151,12 +168,15 @@ if(DEBUG_MODE){
     void *sock_to_servers= get_socket_servers(client_args);
 
     printf("\tWRITE_GET (WRITER)\n");
+	timer_start();
     Tag *max_tag=  SODAW_write_get_phase(obj_name,
 	     client_args->client_id,
             op_num,
             sock_to_servers,
             num_servers
             );
+	timer_stop();
+	clock_t t_write_get = get_time_inter();
 
     Tag new_tag;
     new_tag.z = max_tag->z + 1;
@@ -166,6 +186,8 @@ if(DEBUG_MODE){
     printf("\tWRITE_PUT (WRITER)\n");
     encoded_data->raw_data = payload;
     encoded_data->raw_data_size = payload_size;
+
+	timer_start();
     SODAW_write_put_phase(
             obj_name,
             client_args->client_id,
@@ -175,6 +197,16 @@ if(DEBUG_MODE){
             new_tag,
             encoded_data
             );
+	timer_stop();
+	clock_t t_write_put = get_time_inter();
+
+
+	sprintf(s_log, "{\"client_id\": \"%s\", \"op_num\": %d, \"write_get_time\": %f, \"write_put_time\": %f}", 
+		client_args->client_id, op_num, t_write_get, t_write_put);
+	zlog_info(category_writer_sodaw, s_log);
+	zlog_fini();
+
+
     //!! Why was this turned off? We need to destroy the socket or else it becomes a memory leak
     // as we will constantly generate a new one
     /*
@@ -184,6 +216,8 @@ if(DEBUG_MODE){
 
     */
     //destroy_server_sockets();
+	free(payload);
+	destroy_EncodeData(encoded_data);
     printf("done\n");
     return true;
 }

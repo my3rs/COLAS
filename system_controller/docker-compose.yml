@@ -1,36 +1,43 @@
 reader:
     build: ./
-    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 0 --wait 100  --algorithm ABD  --code reed_solomon
+    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 0 --wait 100  --algorithm SODAW  --code reed_solomon
     volumes:
     - /usr/local/lib:/usr/local/lib
-    - /home/cyril/Workspace:/home/cyril/Workspace
-    environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
+    - /home/cyril/Workspace/COLAS:/home/cyril/Workspace/COLAS
+   environment:
+    - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp
+	- ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+    - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf
 
 writer:
     build: ./
-    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 1 --wait 100  --algorithm ABD  --code reed_solomon
+    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 1 --wait 100  --algorithm SODAW  --code reed_solomon
     volumes:
       - /usr/local/lib:/usr/local/lib
-      - /home/cyril/Workspace:/home/cyril/Workspace
+      - /home/cyril/Workspace/COLAS:/home/cyril/Workspace/COLAS
     environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
+      - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
+	  - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+      - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf
 
 server:
     build: ./
-    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 2 --filesize 100 --wait 100  --algorithm ABD  --code reed_solomon
+    command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 2 --filesize 100 --wait 100  --algorithm SODAW  --code reed_solomon
     volumes:
       - /usr/local/lib:/usr/local/lib
-      - /home/cyril/Workspace:/home/cyril/Workspace
+      - /home/cyril/Workspace/COLAS:/home/cyril/Workspace/COLAS
     environment:
-    - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
+      - LD_LIBRARY_PATH=/usr/local/lib:/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw
+	  - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+      - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf
 
 controller:
     build: ./
     command: /home/cyril/Workspace/COLAS/src/abdprocess --process-type 3
     volumes:
       - /usr/local/lib:/usr/local/lib
-      - /home/cyril/Workspace:/home/cyril/Workspace
+      - /home/cyril/Workspace/COLAS/:/home/cyril/Workspace/COLAS
     environment:
-    - LD_LIBRARY_PATH=/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw:/usr/local/lib
-
+      - LD_LIBRARY_PATH=/home/cyril/Workspace/COLAS/deps/shared_kodocpp:/home/cyril/Workspace/COLAS/src/abd:/home/cyril/Workspace/COLAS/src/sodaw:/usr/local/lib
+	  - ZLOG_CONF_PATH=/home/cyril/Workspace/config/zlog.conf
+      - ZLOG_PROFILE_ERROR=/home/cyril/Workspace/config/zlog_error.conf

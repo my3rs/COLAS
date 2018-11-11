@@ -23,7 +23,6 @@ typedef struct _ENCODED_DATA {
     uint8_t *decoded_data;
     uint8_t **encoded_data;
     uint8_t *raw_data;
-    // std::vector< std::vector< std::vector<uint8_t> > >  *vdata;
     int encoded_symbol_size;
     unsigned int offset_index;
     int num_blocks;

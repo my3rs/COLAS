@@ -5,42 +5,25 @@
 //  context and conceptually acts as a separate process.
 
 #include "client.h"
-/*
-int
-special_zframe_send (zframe_t **self_p, void *dest, int flags) {
-    assert (dest);
-    assert (self_p);
-
-    void *handle = zsock_resolve (dest);
-    if (*self_p) {
-        zframe_t *self = *self_p;
-        assert (zframe_is (self));
-
-        int send_flags = (flags & ZFRAME_MORE)? ZMQ_SNDMORE: 0;
-        send_flags |= (flags & ZFRAME_DONTWAIT)? ZMQ_DONTWAIT: 0;
-        if (flags & ZFRAME_REUSE) {
-            zmq_msg_t copy;
-            zmq_msg_init (&copy);
-            if (zmq_msg_copy (&copy, zframe_data(self)))
-                return -1;
-            if (zmq_sendmsg (handle, &copy, send_flags) == -1) {
-                zmq_msg_close (&copy);
-                return -2;
-            }
-        } else {
-            if (zmq_sendmsg(handle, zframe_data(&self), send_flags) >= 0)
-                zframe_destroy (self_p);
-            else
-                return -3;
-        }
-    }
-    return 0;
-}
-*/
 
 #define DEBUG_MODE  0
 
 extern int s_interrupted;
+
+static clock_t start;
+static clock_t finish;
+
+void timer_start() {
+	start = clock();
+}
+
+void timer_stop() {
+	finish = clock();
+}
+
+clock_t get_time_inter() {
+	return finish - start;
+}
 
 void send_multicast_servers(void *sock_to_servers, int num_servers, char *names[],  int n, ...) {
     RawData *rawdata;

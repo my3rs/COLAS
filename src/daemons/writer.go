@@ -1,12 +1,10 @@
 package daemons
 
 import (
-	"strconv"
-	"os"
-	//	"encoding/base64"
 	"fmt"
 	"log"
-	//"math/rand"
+	"os"
+	"strconv"
 	"strings"
 	"time"
 	"unsafe"
@@ -58,7 +56,6 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 			copyGoParamToCParam(cparameters, parameters)
 
 			client_args = C.create_ClientArgs(*cparameters)
-			encoding_info = C.create_EncodeData(*cparameters)
 
 			ReinitializeParameters()
 			LogParameters()
@@ -73,46 +70,6 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 					os.Exit(0)
 				}
 
-				//rand_wait := rand_wait_time()*int64(time.Millisecond) + int64(time.Millisecond)
-				rand_wait := int64(parameters.Wait) * int64(time.Millisecond)
-				time.Sleep(time.Duration(rand_wait))
-
-				var abd_data *C.RawData = C.create_RawData()
-
-				fmt.Printf("%s  %d %d %s %s\n", parameters.Server_id, opnum, rand_wait, C.GoString(client_args.servers_str), parameters.port)
-
-				start := time.Now()
-
-				// todo: cyril 2018/10/06
-				//payload_size = uint((parameters.Filesize_kb + float64(ran.Intn(100000000)%5)) * 1024)
-				payload_size = uint(data.file_size * 1024)
-
-				fmt.Printf("payload %d\n", payload_size)
-				payload = C.get_random_data(C.uint(payload_size))
-
-				if data.algorithm == "ABD" {
-					abd_data.data = unsafe.Pointer(payload)
-					abd_data.data_size = C.uint(payload_size)
-					
-					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
-				}
-
-
-
-				if data.algorithm == "SODAW" {
-					C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)
-				}
-
-
-				C.free(unsafe.Pointer(payload))
-				C.free(unsafe.Pointer(abd_data))
-
-				elapsed := time.Since(start)
-
-				log.Println(data.run_id, "WRITE", string(data.name), data.write_counter,
-					rand_wait/int64(time.Millisecond), elapsed)
-				data.write_counter += 1
-
 				if len(data.inter_write_wait_distribution) == 2 {
 					write_distribution := data.inter_write_wait_distribution[0]
 					write_distance, _ := strconv.Atoi(data.inter_write_wait_distribution[1])
@@ -120,10 +77,30 @@ func writer_daemon(cparameters *C.Parameters, parameters *Parameters) {
 					if write_distribution == "const" {
 						time.Sleep(time.Duration(write_distance) * 1000 * time.Microsecond)
 					}
-					
+
 				}
 
-				
+				payload_size = uint(data.file_size_kb * 1024)
+
+				payload = C.get_random_data(C.uint(payload_size))
+
+				if data.algorithm == "ABD" {
+					var abd_data *C.RawData = C.create_RawData()
+					abd_data.data = unsafe.Pointer(payload)
+					abd_data.data_size = C.uint(payload_size)
+					C.ABD_write(C.CString("atomic_object"), C.uint(opnum), abd_data, client_args)
+					C.free(unsafe.Pointer(payload))
+					C.free(unsafe.Pointer(abd_data))
+				}
+
+				if data.algorithm == "SODAW" {
+					encoding_info = C.create_EncodeData(*cparameters)
+					C.SODAW_write(C.CString("atomic_object"), C.uint(opnum), payload, C.uint(payload_size), encoding_info, client_args)
+				}
+
+
+				data.write_counter += 1
+
 			} else {
 				time.Sleep(5 * 1000 * time.Microsecond)
 			}
