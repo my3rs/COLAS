@@ -92,6 +92,7 @@ func ParseSodawWrite(filePath, fileName string) {
 		}
 
 	}
+	staticWrite()
 }
 
 func ParseSodawRead(filePath, fileName string) {
@@ -133,31 +134,21 @@ func ParseSodawRead(filePath, fileName string) {
 		}
 
 	}
-
+	staticRead()
 }
 
-func StaticRead(outFile string) {
-	file, err := os.OpenFile(outFile, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+func staticRead() {
 
 	count := make(map[string]int)
 	sumReadGetTime := make(map[string]float64)
 	sumReadValueTime := make(map[string]float64)
 	sumReadCompleteTime := make(map[string]float64)
-	var tmp string
 	var sumGet, sumValue, sumComplete float64
 
 	for clientID, e := range sodawReadData {
 		if len(sodawReadData[clientID]) < 100 {
 			continue
 		}
-		_, err = file.Write([]byte("\n"))
-		checkError(err)
-		tmp = "================= " + clientID + " =================\n"
-		writeToFile(tmp, file)
 
 		for _, v := range e {
 			count[clientID]++
@@ -167,18 +158,10 @@ func StaticRead(outFile string) {
 
 		}
 
-		writeToFile("global\n", file)
-
-		tmp = fmt.Sprintf("Read Get: %.3f us\n", sumReadGetTime[clientID]/float64(count[clientID]))
-		writeToFile(tmp, file)
 		sumGet += sumReadGetTime[clientID] / float64(count[clientID])
 
-		tmp = fmt.Sprintf("Read Value: %.3f ms\n", sumReadValueTime[clientID]/float64(count[clientID]))
-		writeToFile(tmp, file)
 		sumValue += sumReadValueTime[clientID] / float64(count[clientID])
 
-		tmp = fmt.Sprintf("Read Complete: %.3f us\n\n", sumReadCompleteTime[clientID]/float64(count[clientID]))
-		writeToFile(tmp, file)
 		sumComplete += sumReadCompleteTime[clientID] / float64(count[clientID])
 
 	}
@@ -189,14 +172,8 @@ func StaticRead(outFile string) {
 	fmt.Println()
 }
 
-func StaticWrite(outFile string) {
-	file, err := os.OpenFile(outFile, os.O_WRONLY|os.O_CREATE, 0666)
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+func staticWrite() {
 
-	var tmp string
 	count := make(map[string]int)
 	//stage := make(map[string]int)
 	sumWriteGetTime := make(map[string]float64)
@@ -207,21 +184,14 @@ func StaticWrite(outFile string) {
 		if len(sodawWriteData[clientID]) < 100 {
 			continue
 		}
-		writeToFile("\n================="+clientID+"=================\n", file)
 		for _, v := range e {
 			count[clientID]++
 
 			sumWriteGetTime[clientID] += v.WriteGetTime
 			sumWritePutTime[clientID] += v.WritePutTime
 		}
-		//writeToFile("global\n", file)
-		tmp = fmt.Sprintf("Write Get: %.3f us\n", sumWriteGetTime[clientID]/float64(count[clientID]))
-		writeToFile(tmp, file)
 
 		sumG += sumWriteGetTime[clientID] / float64(count[clientID])
-
-		tmp = fmt.Sprintf("Write Put: %.3f ms\n", sumWritePutTime[clientID]/float64(count[clientID]))
-		writeToFile(tmp, file)
 
 		sumP += sumWritePutTime[clientID] / float64(count[clientID])
 	}

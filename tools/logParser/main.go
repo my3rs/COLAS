@@ -2,113 +2,47 @@ package main
 
 import (
 	"./utils"
-	"bufio"
-	"encoding/json"
 	"fmt"
-	"log"
-	"os"
-	"strings"
 )
 
 var (
-	mid bool = false
-	lat bool = false
+	sLogRootPath     = "D:\\Users\\Cyril\\Desktop\\logs\\"
+	arrayExperiments = []string{
+		"Reader固定-增加Writer", // 0
+		"Writer固定-增加Reader", // 1
+		"服务器数量及读写比例",        // 2
+		"文件大小变化",            // 3
+		"写速率对读的影响",          // 4
+		"只有读-Reader数量变化",    // 5
+		"只有写-Writer数量变化",    // 6
+		"只有写-写速率变化",
+	}
+	nReader   = "30"
+	nWriter   = "0"
+	nServer   = "5"
+	fileSize  = "10240"
+	readDist  = "100"
+	writeDist = "100"
+	sExp      = arrayExperiments[5]
+	sConfig   = "R" + nReader + "W" + nWriter + "S" + nServer + "F" + fileSize + "RD" + readDist + "WD" + writeDist
+	sLogPath  = sLogRootPath + sExp + "\\" + sConfig + "\\"
 )
 
 func main() {
-	fmt.Println("===========READER===========")
-	parse("reader.log")
+	fmt.Println("Experiment: ", sExp, "\t", "Configure: ", sConfig)
+	fmt.Println()
+
+	utils.ParseSodawRead(sLogPath, "reader_sodaw.log")
+
+	utils.ParseSodawWrite(sLogPath, "writer_sodaw.log")
+
+	utils.ParseStats(sLogPath, "stats")
 
 	fmt.Println()
-	fmt.Println("===========WRITER===========")
-	parse("writer.log")
-}
+	fmt.Println("read tasks/min")
+	utils.TaskThroughput(sLogPath, "reader_sodaw.log")
+	fmt.Println()
 
-func parse(fileName string) map[string]map[int]*utils.LogItem {
-	errorCount := 0
-	filePath := "/home/cyril/Workspace/logs/12.7.50.50/"
-	file, err := os.Open(filePath + fileName)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer file.Close()
-
-	m := make(map[string]map[int]*utils.LogItem)
-
-	scanner := bufio.NewScanner(file)
-	scanner.Split(bufio.ScanLines)
-
-	for scanner.Scan() {
-		line := scanner.Text()
-		//fmt.Println(line)
-		lr := strings.Split(line, " - ")
-		timeLine := strings.Split(lr[0], " ")[1]
-		_ = timeLine
-		logLine := lr[1]
-
-		var l utils.LogLine
-		err = json.Unmarshal([]byte(logLine), &l)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if m[l.ClientID] == nil {
-			m[l.ClientID] = make(map[int]*utils.LogItem)
-		}
-		if m[l.ClientID][l.OpNum] == nil {
-			m[l.ClientID][l.OpNum] = &utils.LogItem{l.Latency, l.DataSize, l.Inter}
-		} else {
-			//log.Fatal("ERROR")
-			//os.Exit(-1)
-			//log.Fatal(l.ClientID, l.OpNum, l.Latency, l.DataSize, l.Inter)
-			//log.Fatal(m[l.ClientID][l.OpNum])
-			errorCount++
-			continue
-		}
-
-	}
-
-	showLatency(m)
-	showThroughput(m)
-	fmt.Println(errorCount)
-
-	return m
-}
-
-func showLatency(m map[string]map[int]*utils.LogItem) {
-	var maxLatency float64 = 0
-	var sumLatency float64 = 0
-	var num int = 0
-
-	for _, v := range m {
-		for _, item := range v {
-			num++
-			sumLatency += item.Latency
-
-			if item.Latency > maxLatency {
-				maxLatency = item.Latency
-			}
-		}
-	}
-
-	fmt.Println("avg latency: ", sumLatency/float64(num), "ms")
-	fmt.Println("max latency: ", maxLatency, "ms")
-
-}
-
-func showThroughput(m map[string]map[int]*utils.LogItem) {
-	sumDataSize := 0
-	sumInter := 0.0
-	num := 0
-
-	for _, v := range m {
-		for _, item := range v {
-			num++
-			sumDataSize += item.DataSize
-			sumInter += item.Inter
-		}
-	}
-
-	fmt.Println("throughput: ", float64(sumDataSize)*1000/sumInter/1024.0/1024.0, "MB/s")
+	fmt.Println("write tasks/min")
+	utils.TaskThroughput(sLogPath, "writer_sodaw.log")
 }
